@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.geometry.Insets?>
+
+
+<VBox prefHeight="425.0" prefWidth="296.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.EditorController">
+   <children>
+      <GridPane hgap="5" vgap="5">
+          <columnConstraints>
+              <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+              <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" />
+          </columnConstraints>
+         <children>
+         
+             <Label text="Mittente:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+             <Label text="Destinatario:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+             <Label text="Oggetto:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+         	<Label text="Testo:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+         
+             <TextField fx:id="mittenteField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+             <TextField fx:id="destinatarioField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+             <TextField fx:id="argomentoField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+             <TextField fx:id="testoField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>  
+          
+          <padding>
+              <Insets bottom="10" left="10" right="10" top="97" />
+          </padding>
+         
+      </GridPane>
+      <Button fx:id="buttonDelete" alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="77.0" text="Delete" textAlignment="CENTER" textFill="RED" textOverrun="CLIP">
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
+      </Button>
+   </children>
+</VBox>
