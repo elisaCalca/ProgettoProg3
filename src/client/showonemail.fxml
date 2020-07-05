@@ -12,7 +12,7 @@
 <?import javafx.geometry.Insets?>
 
 
-<VBox prefHeight="425.0" prefWidth="296.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.EditorController">
+<VBox prefHeight="425.0" prefWidth="296.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ShowOneMailController">
    <children>
       <GridPane hgap="5" vgap="5">
           <columnConstraints>

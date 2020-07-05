@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-public class EditorController {
+public class ShowOneMailController {
 	
 	@FXML
 	private TextField mittenteField;
@@ -22,9 +22,9 @@ public class EditorController {
 	@FXML
 	private Button buttonDelete;
 	
-	private DataModel model;
+	private CasellaPostaViewModel model;
 	
-	public void initModel(DataModel model) {
+	public void initModel(CasellaPostaViewModel model) {
 		if(this.model != null) {
 			throw new IllegalStateException("Model can only be initialized once!");
 		}

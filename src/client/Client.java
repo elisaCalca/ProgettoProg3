@@ -18,15 +18,15 @@ public class Client extends Application{
 		BorderPane root = new BorderPane();
 		FXMLLoader listLoader = new FXMLLoader(getClass().getResource("list.fxml"));
 		root.setCenter(listLoader.load());
-		ListController listController = listLoader.getController();
+		MailListController listController = listLoader.getController();
 		
-		FXMLLoader editorLoader = new FXMLLoader(getClass().getResource("editor.fxml"));
+		FXMLLoader editorLoader = new FXMLLoader(getClass().getResource("showonemail.fxml"));
 		root.setRight(editorLoader.load());
-		EditorController editorController = editorLoader.getController();
+		ShowOneMailController editorController = editorLoader.getController();
 		
-		DataModel model = new DataModel();
-		listController.initModel(model);
-		editorController.initModel(model);
+		CasellaPostaViewModel casellaPosta = new CasellaPostaViewModel();
+		listController.initModel(casellaPosta);
+		editorController.initModel(casellaPosta);
 		
 		Scene scene = new Scene(root, 800, 600);
 		primaryStage.setScene(scene);

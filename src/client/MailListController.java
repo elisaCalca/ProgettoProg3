@@ -1,21 +1,22 @@
 package client;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
-public class ListController {
+public class MailListController {
 
 	@FXML
-	private TextField nomeUtente;
+	private Label nomeUtente;
 	
 	@FXML
 	private ListView<Email> messageList;
 	
-	private DataModel model;
+	private CasellaPostaViewModel model;
 	
-	public void initModel(DataModel model) {
+	public void initModel(CasellaPostaViewModel model) {
 		if(this.model != null) {
 			throw new IllegalStateException("Model can only be initialized once!");
 		}
@@ -23,7 +24,6 @@ public class ListController {
 		this.model = model;
 		
 		nomeUtente.setText("Casella di posta di Nome Cognome");
-		nomeUtente.setDisable(false);
 		
 		messageList.setItems(model.getMessageList());
 		messageList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -40,6 +40,7 @@ public class ListController {
 		
 		/*
 		 * Non ho capito cosa fa - MA - se commentato, nella listView si vedono gli indirizzi di memoria e non le mail
+		 * Probabilmente è quello che concatena il contenuto complesso delle righe della lista
 		 */
 		messageList.setCellFactory(lv -> new ListCell<Email>() {
 			@Override

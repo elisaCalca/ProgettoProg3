@@ -6,18 +6,18 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane prefHeight="450.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ListController">
+<StackPane prefHeight="450.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.MailListController">
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
-            <TextField fx:id="nomeUtente" alignment="CENTER" prefHeight="87.0" prefWidth="598.0">
+            <Label fx:id="nomeUtente" alignment="CENTER" prefHeight="87.0" prefWidth="598.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
                <effect>
                   <DropShadow />
                </effect>
-            </TextField>
+            </Label>
             <ListView fx:id="messageList" prefHeight="364.0" prefWidth="600.0" />
          </children>
       </VBox>

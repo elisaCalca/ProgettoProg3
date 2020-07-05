@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class DataModel {
+public class CasellaPostaViewModel {
 	
 	private ObservableList<Email> messageList = FXCollections.observableArrayList(
 			message -> new Observable[] {
