@@ -12,12 +12,16 @@ public class MailListController {
 	private Label nomeUtente;
 	
 	@FXML
+	private Label indMail;
+	
+	@FXML
 	private ListView<Email> messageList;
 	
 	private CasellaPostaViewModel model;
 	
 	public void initData(String name, String surname) {
 		nomeUtente.setText("Casella di posta di " + name + " " + surname);
+		indMail.setText(name + "." + surname + "@mymaildomain.it");
 	}
 	
 	public void initModel(CasellaPostaViewModel model) {
@@ -26,12 +30,12 @@ public class MailListController {
 		}
 		
 		this.model = model;
-		
+
 		messageList.setItems(model.getMessageList());
 		messageList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			model.setCurrentEmail(newSelection);
 		});
-	
+		
 		model.currentEmailProperty().addListener((obs, oldEmail, newEmail) -> {
 			if(newEmail == null) {
 				messageList.getSelectionModel().clearSelection();

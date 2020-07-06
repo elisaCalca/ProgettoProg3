@@ -1,5 +1,6 @@
 package client;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javafx.beans.property.IntegerProperty;
@@ -9,9 +10,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-/*
- * JavaBean
- */
 public class Email {
 	
 	/*
@@ -34,18 +32,20 @@ public class Email {
 	/*
 	 * Definizione della property DATA
 	 */
-	private final ObjectProperty<Date> date = new SimpleObjectProperty<Date>();
-	
-	public final ObjectProperty<Date> dateProperty() {
+	private final StringProperty date = new SimpleStringProperty();
+
+	public final StringProperty dateProperty() {
 		return this.date;
 	}
 	
-	public final Date getDate() {
+	public final String getDate() {
 		return this.dateProperty().get();
 	}
 	
-	public final void setDate(Date date) {
-		this.dateProperty().set(date);
+	public final void setDate(final Date date) {
+		SimpleDateFormat DateFor = new SimpleDateFormat("dd/MM/yyyy");
+		String stringDate= DateFor.format(date);
+		this.dateProperty().set(stringDate);
 	}
 	
 	/*
