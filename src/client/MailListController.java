@@ -16,14 +16,16 @@ public class MailListController {
 	
 	private CasellaPostaViewModel model;
 	
+	public void initData(String name, String surname) {
+		nomeUtente.setText("Casella di posta di " + name + " " + surname);
+	}
+	
 	public void initModel(CasellaPostaViewModel model) {
 		if(this.model != null) {
 			throw new IllegalStateException("Model can only be initialized once!");
 		}
 		
 		this.model = model;
-		
-		nomeUtente.setText("Casella di posta di Nome Cognome");
 		
 		messageList.setItems(model.getMessageList());
 		messageList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -50,6 +52,7 @@ public class MailListController {
 					setText(null);
 				} else {
 					setText(email.getId() + " " +
+							email.getDate() + " " +
 							email.getMittente() + " " +
 							email.getDestinatario() + " " +
 							email.getArgomento() + " " +

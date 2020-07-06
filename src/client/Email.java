@@ -1,7 +1,11 @@
 package client;
 
+import java.util.Date;
+
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -28,6 +32,23 @@ public class Email {
 	}
 	
 	/*
+	 * Definizione della property DATA
+	 */
+	private final ObjectProperty<Date> date = new SimpleObjectProperty<Date>();
+	
+	public final ObjectProperty<Date> dateProperty() {
+		return this.date;
+	}
+	
+	public final Date getDate() {
+		return this.dateProperty().get();
+	}
+	
+	public final void setDate(Date date) {
+		this.dateProperty().set(date);
+	}
+	
+	/*
 	 * Definizione della property MITTENTE
 	 */
 	private final StringProperty mittente = new SimpleStringProperty();
@@ -47,18 +68,18 @@ public class Email {
 	/*
 	 * Definizione della property DESTINATARIO
 	 */
-	private final StringProperty destinatario = new SimpleStringProperty();
+	private final StringProperty destinatari = new SimpleStringProperty();
 	
-	public final StringProperty destinatarioProperty() {
-		return this.destinatario;
+	public final StringProperty destinatariProperty() {
+		return this.destinatari;
 	}
 	
 	public final String getDestinatario() {
-		return this.destinatarioProperty().get();
+		return this.destinatariProperty().get();
 	}
 	
-	public final void setDestinatario(String destinatario) {
-		this.destinatarioProperty().set(destinatario);
+	public final void setDestinatario(String destinatari) {
+		this.destinatariProperty().set(destinatari);
 	}
 	
 	/*
@@ -98,8 +119,9 @@ public class Email {
 	/*
 	 * Costruttore del JavaBean
 	 */
-	public Email(int id, String mittente, String destinatario, String argomento, String testo) {
+	public Email(int id, Date date, String mittente, String destinatario, String argomento, String testo) {
 		setId(id);
+		setDate(date);
 		setMittente(mittente);
 		setDestinatario(destinatario);
 		setArgomento(argomento);

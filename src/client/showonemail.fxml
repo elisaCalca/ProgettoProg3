@@ -24,12 +24,14 @@
              <Label text="Mittente:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
              <Label text="Destinatario:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
              <Label text="Oggetto:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-         	<Label text="Testo:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+         	 <Label text="Testo:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+         	 <Label text="Data:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
          
              <TextField fx:id="mittenteField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
              <TextField fx:id="destinatarioField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
              <TextField fx:id="argomentoField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
              <TextField fx:id="testoField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+             <TextField fx:id="dataField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>  
           
           <padding>

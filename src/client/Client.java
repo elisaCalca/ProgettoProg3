@@ -1,5 +1,7 @@
 package client;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,24 +16,16 @@ public class Client extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
 		BorderPane root = new BorderPane();
-		FXMLLoader listLoader = new FXMLLoader(getClass().getResource("list.fxml"));
-		root.setCenter(listLoader.load());
-		MailListController listController = listLoader.getController();
+		FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("login.fxml"));
+		root.setCenter(loginLoader.load());
 		
-		FXMLLoader editorLoader = new FXMLLoader(getClass().getResource("showonemail.fxml"));
-		root.setRight(editorLoader.load());
-		ShowOneMailController editorController = editorLoader.getController();
+		LogInController logInController = loginLoader.getController();
+		logInController.init();
 		
-		CasellaPostaViewModel casellaPosta = new CasellaPostaViewModel();
-		listController.initModel(casellaPosta);
-		editorController.initModel(casellaPosta);
-		
-		Scene scene = new Scene(root, 800, 600);
+		Scene scene = new Scene(root, 495, 128);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-	
 	}
 
 }

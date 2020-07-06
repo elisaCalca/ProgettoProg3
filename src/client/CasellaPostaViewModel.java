@@ -1,5 +1,8 @@
 package client;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -11,8 +14,9 @@ public class CasellaPostaViewModel {
 	private ObservableList<Email> messageList = FXCollections.observableArrayList(
 			message -> new Observable[] {
 					message.idProperty(),
+					message.dateProperty(),
 					message.mittenteProperty(),
-					message.destinatarioProperty(),
+					message.destinatariProperty(),
 					message.argomentoProperty(),
 					message.testoProperty()
 			});
@@ -41,14 +45,28 @@ public class CasellaPostaViewModel {
 	}
 	
 	public void loadMessageList() {
+//		ArrayList<String> d1 = new ArrayList<String>();
+//		d1.add("D1");
+//		ArrayList<String> d2 = new ArrayList<String>();
+//		d1.add("D2");
+//		ArrayList<String> d3 = new ArrayList<String>();
+//		d1.add("D3");
+//		ArrayList<String> d4 = new ArrayList<String>();
+//		d4.add("D4");
+//		ArrayList<String> d5 = new ArrayList<String>();
+//		d5.add("D5");
+//		ArrayList<String> d6 = new ArrayList<String>();
+//		d6.add("D6");
+//		ArrayList<String> d7 = new ArrayList<String>();
+//		d7.add("D7");
 		messageList.setAll(
-				new Email(1, "M1", "D1", "Arg1", "Text1"),
-				new Email(2, "M2", "D2", "Arg2", "Text2"),
-				new Email(3, "M3", "D3", "Arg3", "Text3"),
-				new Email(4, "M4", "D4", "Arg4", "Text4"),
-				new Email(5, "M5", "D5", "Arg5", "Text5"),
-				new Email(6, "M6", "D6", "Arg6", "Text6"),
-				new Email(7, "M7", "D7", "Arg7", "Text7")
+				new Email(1, new Date(2020, 1, 1), "M1", "D1", "Arg1", "Tanti auguri di buon 2020!"),
+				new Email(2, new Date(2020, 1, 20), "M2", "D2", "Arg2", "Text2"),
+				new Email(3, new Date(2020, 2, 5), "M3", "D3", "Arg3", "Text3"),
+				new Email(4, new Date(2018, 12, 10), "M4", "D4", "Arg4", "Text4"),
+				new Email(5, new Date(2019, 11, 8), "M5", "D5", "Arg5", "Text5"),
+				new Email(6, new Date(2020, 6, 20), "M6", "D6", "Arg6", "Text6"),
+				new Email(7, new Date(2020, 4, 20), "M7", "D7", "Arg7", "Text7")
 		);
 		orderByIdDesc();
 	}
