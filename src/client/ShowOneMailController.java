@@ -75,7 +75,9 @@ public class ShowOneMailController {
 		});
 		
 		buttonReply.setOnAction((ActionEvent e) -> {
-			
+			if(model.getCurrentEmail() == null) {
+				System.out.println("miao");
+			}
 		});
 		
 		buttonDelete.setOnAction((ActionEvent e) -> {

@@ -74,11 +74,11 @@ public class Email {
 		return this.destinatari;
 	}
 	
-	public final String getDestinatario() {
+	public final String getDestinatari() {
 		return this.destinatariProperty().get();
 	}
 	
-	public final void setDestinatario(String destinatari) {
+	public final void setDestinatari(String destinatari) {
 		this.destinatariProperty().set(destinatari);
 	}
 	
@@ -119,11 +119,11 @@ public class Email {
 	/*
 	 * Costruttore del JavaBean
 	 */
-	public Email(int id, Date date, String mittente, String destinatario, String argomento, String testo) {
+	public Email(int id, Date date, String mittente, String destinatari, String argomento, String testo) {
 		setId(id);
 		setDate(date);
 		setMittente(mittente);
-		setDestinatario(destinatario);
+		setDestinatari(destinatari);
 		setArgomento(argomento);
 		setTesto(testo);
 	}

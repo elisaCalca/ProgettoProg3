@@ -58,7 +58,7 @@ public class MailListController {
 					setText(email.getId() + " " +
 							email.getDate() + " " +
 							email.getMittente() + " " +
-							email.getDestinatario() + " " +
+							email.getDestinatari() + " " +
 							email.getArgomento() + " " +
 							email.getTesto() + " ");
 				}
