@@ -21,25 +21,17 @@
             <Insets right="10.0" />
          </GridPane.margin>
       </Button>
-      <Label text="Name: ">
+      <Label text="Indirizzo Email: ">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
       </Label>
-      <Label text="Surname: " GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets left="10.0" />
-         </GridPane.margin>
-      </Label>
+     
       <TextField fx:id="name" GridPane.columnIndex="1">
          <GridPane.margin>
             <Insets right="10.0" />
          </GridPane.margin>
       </TextField>
-      <TextField fx:id="surname" GridPane.columnIndex="1" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets right="10.0" />
-         </GridPane.margin>
-      </TextField>
+
    </children>
 </GridPane>

@@ -12,16 +12,12 @@ public class MailListController {
 	private Label nomeUtente;
 	
 	@FXML
-	private Label indMail;
-	
-	@FXML
 	private ListView<Email> messageList;
 	
 	private CasellaPostaViewModel model;
 	
-	public void initData(String name, String surname) {
-		nomeUtente.setText("Casella di posta di " + name + " " + surname);
-		indMail.setText(name + "." + surname + "@mymaildomain.it");
+	public void initData(String name) {
+		nomeUtente.setText("Casella di posta di " + name);
 	}
 	
 	public void initModel(CasellaPostaViewModel model) {
