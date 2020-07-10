@@ -12,10 +12,7 @@ import javafx.stage.Stage;
 public class LogInController {
 	
 	@FXML
-	private TextField name;
-//	
-//	@FXML
-//	private TextField surname;
+	private TextField indirizzo;
 	
 	@FXML
 	private Button buttonLogIn;
@@ -23,9 +20,10 @@ public class LogInController {
 	
 	public void init() {
 		buttonLogIn.setOnAction((ActionEvent e) -> {
-			if(!isBlankOrEmpty(name.getText() /*+ surname.getText()*/))
+			if(!isBlankOrEmpty(indirizzo.getText()))
 				try {
-					generateClient(new Stage(), name.getText()/*, surname.getText()*/);
+					
+					generateClient(new Stage(), indirizzo.getText());
 				} catch (Exception exc) {
 					exc.printStackTrace();
 				}
@@ -42,18 +40,20 @@ public class LogInController {
 		return false;
 	}
 	
-	private void generateClient(Stage primaryStage, String name/*, String surname*/) throws Exception {
+	private void generateClient(Stage primaryStage, String name) throws Exception {
 		BorderPane root = new BorderPane();
 		FXMLLoader listLoader = new FXMLLoader(getClass().getResource("list.fxml"));
 		root.setCenter(listLoader.load());
 		MailListController listController = listLoader.getController();
-		listController.initData(name/*, surname*/);
+		listController.initData(name);
 		
 		FXMLLoader editorLoader = new FXMLLoader(getClass().getResource("showonemail.fxml"));
-		root.setRight(editorLoader.load());
+		root.setRight(editorLoader.load());	
 		ShowOneMailController editorController = editorLoader.getController();
 		
 		CasellaPostaViewModel casellaPosta = new CasellaPostaViewModel();
+
+		casellaPosta.currentUserProperty().set(indirizzo.getText());
 		listController.initModel(casellaPosta);
 		editorController.initModel(casellaPosta);
 		

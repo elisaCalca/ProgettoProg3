@@ -10,9 +10,7 @@
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
-            <Label fx:id="nomeUtente" alignment="CENTER" prefHeight="67.0" prefWidth="598.0">
-            </Label>
-            <Label fx:id="indMail" alignment="CENTER" prefHeight="27.0" prefWidth="598.0">
+            <Label fx:id="indUtente" alignment="CENTER" prefHeight="67.0" prefWidth="598.0">
             </Label>
             <ListView fx:id="messageList" prefHeight="364.0" prefWidth="600.0" />
          </children>

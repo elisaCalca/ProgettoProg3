@@ -27,7 +27,7 @@
          </GridPane.margin>
       </Label>
      
-      <TextField fx:id="name" GridPane.columnIndex="1">
+      <TextField fx:id="indirizzo" GridPane.columnIndex="1">
          <GridPane.margin>
             <Insets right="10.0" />
          </GridPane.margin>

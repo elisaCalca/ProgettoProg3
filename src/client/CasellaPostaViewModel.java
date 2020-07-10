@@ -10,21 +10,33 @@ import org.json.simple.parser.JSONParser;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class CasellaPostaViewModel {
 	
-	private ObservableList<Email> messageList = FXCollections.observableArrayList(
-			message -> new Observable[] {
-					message.idProperty(),
-					message.dateProperty(),
-					message.mittenteProperty(),
-					message.destinatariProperty(),
-					message.argomentoProperty(),
-					message.testoProperty()
-			});
+	/*
+	 * Definizione della property currentUser
+	 */
+	private final StringProperty currentUser = new SimpleStringProperty();
 	
+	public final StringProperty currentUserProperty() {
+		return this.currentUser;
+	}
+	
+	public final String getCurrentUser() {
+		return this.currentUserProperty().get();
+	}
+	
+	public final void setCurrentUser(String usr) {
+		this.currentUserProperty().set(usr);
+	}
+	
+	/*
+	 * Definizione della property currentEmail
+	 */
 	private final ObjectProperty<Email> currentEmail = new SimpleObjectProperty<>(null);
 
 	public final ObjectProperty<Email> currentEmailProperty() {
@@ -39,6 +51,19 @@ public class CasellaPostaViewModel {
 		this.currentEmailProperty().set(email);
 	}
 	
+	/*
+	 * Definizione dell'ObservableList messageList
+	 */
+	private ObservableList<Email> messageList = FXCollections.observableArrayList(
+			message -> new Observable[] {
+					message.idProperty(),
+					message.dateProperty(),
+					message.mittenteProperty(),
+					message.destinatariProperty(),
+					message.argomentoProperty(),
+					message.testoProperty()
+			});
+			
 	public ObservableList<Email> getMessageList() {
 		return messageList;
 	}
@@ -80,9 +105,8 @@ public class CasellaPostaViewModel {
 					strDest.append(";");
 				}
 				
-				//aggiunge solo quelle dell'utente loggato
-				String strTemp = "Elisa.Calcaterra@mymail.com";
-				if(strDest.toString().toLowerCase().contains(strTemp.toLowerCase())) {
+				//aggiunge solo quelle dell'utente loggato -- Elisa.Calcaterra@mymail.com
+				if(strDest.toString().toLowerCase().contains(this.getCurrentUser().toLowerCase())) {
 					messageList.add(new Email(id, date, mittente, strDest.toString(), argomento, testo));
 				}
 			

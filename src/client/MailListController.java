@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 public class MailListController {
 
 	@FXML
-	private Label nomeUtente;
+	private Label indUtente;
 	
 	@FXML
 	private ListView<Email> messageList;
@@ -17,7 +17,7 @@ public class MailListController {
 	private CasellaPostaViewModel model;
 	
 	public void initData(String name) {
-		nomeUtente.setText("Casella di posta di " + name);
+		indUtente.setText("Casella di posta di " + name);
 	}
 	
 	public void initModel(CasellaPostaViewModel model) {
@@ -26,7 +26,7 @@ public class MailListController {
 		}
 		
 		this.model = model;
-
+		
 		messageList.setItems(model.getMessageList());
 		messageList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			model.setCurrentEmail(newSelection);

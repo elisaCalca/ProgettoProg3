@@ -26,11 +26,12 @@
          	 <Label text="Data:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
          	 <Label text="Testo:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
          
-             <TextField fx:id="mittenteField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-             <TextField fx:id="destinatarioField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-             <TextField fx:id="argomentoField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-             <TextField fx:id="dateField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-             <TextField fx:id="testoField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+             <TextField fx:id="mittenteField" GridPane.columnIndex="1" GridPane.rowIndex="0" editable="false"/>
+             <TextField fx:id="destinatarioField" GridPane.columnIndex="1" GridPane.rowIndex="1" editable="false"/>
+             <TextField fx:id="argomentoField" GridPane.columnIndex="1" GridPane.rowIndex="2" editable="false"/>
+             <TextField fx:id="dateField" GridPane.columnIndex="1" GridPane.rowIndex="3" editable="false"/>
+         	 <TextArea fx:id="testoField" GridPane.columnIndex="1" GridPane.rowIndex="4" layoutX="61.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" editable="false"/>
+         	 
          </children>  
           
           <padding>
