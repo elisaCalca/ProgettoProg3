@@ -41,8 +41,7 @@ public class MailListController {
 		});
 		
 		/*
-		 * Non ho capito cosa fa - MA - se commentato, nella listView si vedono gli indirizzi di memoria e non le mail
-		 * Probabilmente è quello che concatena il contenuto complesso delle righe della lista
+		 * Concatena il contenuto delle righe della ListView
 		 */
 		messageList.setCellFactory(lv -> new ListCell<Email>() {
 			@Override
@@ -51,12 +50,14 @@ public class MailListController {
 				if(empty) {
 					setText(null);
 				} else {
-					setText(email.getId() + " " +
-							email.getDate() + " " +
-							email.getMittente() + " " +
-							email.getDestinatari() + " " +
-							email.getArgomento() + " " +
-							email.getTesto() + " ");
+					setText(
+//							email.getId() + " " +
+							email.getDate() + "     " +
+							email.getMittente() + "     " +
+							email.getArgomento() + "  -  " +
+							email.getTesto() + " " 
+//							email.getDestinatari() + " "
+					);
 				}
 			}
 		});

@@ -1,15 +1,13 @@
 package client;
 
-import java.io.FileWriter;
+import java.util.List;
 
-import org.json.simple.JSONObject;
-
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import mailutils.MailUtils;
 
 public class ShowOneMailController {
 
@@ -49,7 +47,7 @@ public class ShowOneMailController {
 
 		this.model = model;
 
-		model.loadMessageList(); // aggiunto per far caricare le email del file nella casella
+		model.loadMessageList(); // aggiunto per far caricare le email del file nella casella di posta
 
 		//ascolta l'email che è attualmente selezionata
 		model.currentEmailProperty().addListener((obs, oldEmail, newEmail) -> {
@@ -87,7 +85,7 @@ public class ShowOneMailController {
 		});
 
 		buttonDelete.setOnAction((ActionEvent e) -> {
-			if (model.getMessageList().size() > 0) { // serve l'if altrimenti, se la lista è vuota, da eccezione
+			if (model.getMessageList().size() > 0) {
 				
 				//Scrive la mail nel cestino dell'utente
 				Email toDelete = model.currentEmailProperty().get();
@@ -109,31 +107,16 @@ public class ShowOneMailController {
 
 	}
 	
+	/*
+	 * Legge il vecchio file trash
+	 * Aggiunge la nuova email alla lista ottenuta dal trash
+	 * Riscrive il trash contenente la nuova email
+	 */
 	private void sendEmailToTrash(Email trash) {
-		JSONObject jsonTrash = new JSONObject();
-		jsonTrash.put("id", trash.getId());
-		jsonTrash.put("date", trash.getDate());
-		jsonTrash.put("mittente", trash.getMittente());
-		jsonTrash.put("destinatari", trash.getDestinatari());
-		jsonTrash.put("argomento", trash.getArgomento());
-		jsonTrash.put("testo", trash.getTesto());
-		
-		//if not exist create trash.json
-		
-		//read trash.json
-		
-		//append the new trashed to the jsonArray
-		
-		//Write  new JSON trash file
-        try (FileWriter file = new FileWriter("File/" + model.getCurrentUser() + "_trash.json")) {
- 
-            file.write(employeeList.toJSONString());
-            file.flush();
- 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-		
+		String filepath = "Files/Trash/" + model.getCurrentUser() + "_trash.json";
+		List<Email> trashList = MailUtils.readEmailsFromJSON(filepath);
+		trashList.add(trash);
+		MailUtils.writeEmailsInJSON(filepath, trashList);
 	}
 
 	

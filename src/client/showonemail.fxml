@@ -21,7 +21,7 @@
          <children>
          
              <Label text="Mittente:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-             <Label text="Destinatario:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+             <Label text="Destinatari:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
              <Label text="Oggetto:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
          	 <Label text="Data:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
          	 <Label text="Testo:" GridPane.columnIndex="0" GridPane.rowIndex="4" />

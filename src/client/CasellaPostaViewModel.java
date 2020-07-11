@@ -2,6 +2,7 @@ package client;
 
 import java.io.FileReader;
 import java.util.Date;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -14,6 +15,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import mailutils.MailUtils;
 
 public class CasellaPostaViewModel {
 	
@@ -77,45 +79,16 @@ public class CasellaPostaViewModel {
 	 * Inserisce i messaggi nella messageList
 	 * Ignora il messaggio se l'utente loggato non è tra i destinatari
 	 */
-	@SuppressWarnings("deprecation")
 	public void loadMessageList() {
-		JSONParser parser = new JSONParser();
-		try {
-			JSONArray emailList = (JSONArray) parser.parse(new FileReader("File/emails.json"));;
-			
-			for (int index = 0; index < emailList.size(); index++) {
-				JSONObject jsonAtt = (JSONObject)emailList.get(index);
-				JSONObject jsonEmail = (JSONObject)jsonAtt.get("email");
-				
-				int id = Integer.parseInt((String)jsonEmail.get("id"));
-				
-				String [] res = ((String)jsonEmail.get("date")).split("/");
-				Date date = new Date(Integer.parseInt(res[2])-1900, Integer.parseInt(res[1])-1, Integer.parseInt(res[0]));
-			
-				String mittente = (String)jsonEmail.get("mittente");
-				
-				String argomento = (String)jsonEmail.get("argomento");
-				
-				String testo = (String)jsonEmail.get("testo");
-
-				JSONArray jsonDestinatari = (JSONArray)jsonEmail.get("destinatari");
-				StringBuilder strDest = new StringBuilder();
-				for (int nDes = 0; nDes < jsonDestinatari.size(); nDes++) {
-					strDest.append((String)jsonDestinatari.get(nDes));;
-					strDest.append(";");
-				}
-				
-				//aggiunge solo quelle dell'utente loggato -- Elisa.Calcaterra@mymail.com
-				if(strDest.toString().toLowerCase().contains(this.getCurrentUser().toLowerCase())) {
-					messageList.add(new Email(id, date, mittente, strDest.toString(), argomento, testo));
-				}
-			
+		List<Email> emails = MailUtils.readEmailsFromJSON("Files/emails.json");
+		List<Email> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + getCurrentUser() + "_trash.json");
+		for(Email em : emails) {
+			//Elisa.Calcaterra@mymail.com
+			if(em.getDestinatari().toLowerCase().contains(getCurrentUser().toLowerCase()) && !trash.contains(em)) {
+				messageList.add(em);
 			}
-			orderByDateDesc();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		
+		orderByDateDesc();
 	}
 	
 	private void orderByDateDesc() {
