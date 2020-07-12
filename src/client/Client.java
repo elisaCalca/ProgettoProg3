@@ -23,7 +23,7 @@ public class Client extends Application{
 		LogInController logInController = loginLoader.getController();
 		logInController.init();
 		
-		Scene scene = new Scene(root, 495, 128);
+		Scene scene = new Scene(root, 495, 200);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

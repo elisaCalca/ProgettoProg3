@@ -17,7 +17,7 @@ public class MailListController {
 	private CasellaPostaViewModel model;
 	
 	public void initData(String name) {
-		indUtente.setText("Casella di posta di " + name);
+		indUtente.setText("Mailbox of " + name);
 	}
 	
 	public void initModel(CasellaPostaViewModel model) {
@@ -51,12 +51,10 @@ public class MailListController {
 					setText(null);
 				} else {
 					setText(
-//							email.getId() + " " +
 							email.getDate() + "     " +
 							email.getMittente() + "     " +
 							email.getArgomento() + "  -  " +
 							email.getTesto() + " " 
-//							email.getDestinatari() + " "
 					);
 				}
 			}

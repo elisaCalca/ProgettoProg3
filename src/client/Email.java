@@ -117,7 +117,7 @@ public class Email {
 	}
 	
 	/*
-	 * Costruttore del JavaBean
+	 * Costruttore
 	 */
 	public Email(int id, Date date, String mittente, String destinatari, String argomento, String testo) {
 		setId(id);
@@ -136,10 +136,8 @@ public class Email {
 			this.getArgomento().equals(em.getArgomento()) &&
 			this.getTesto().equals(em.getTesto())				
 		) {
-			System.out.println("siamo due email uguali" + this.getArgomento());
 			return true;
 		}
-		System.out.println("diverse" + this.getArgomento());
 		return false;
 	}
 	

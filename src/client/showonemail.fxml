@@ -11,31 +11,31 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.geometry.Insets?>
 
-<VBox prefHeight="425.0" prefWidth="296.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ShowOneMailController">
+<VBox prefHeight="447.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ShowOneMailController">
    <children>
-      <GridPane hgap="5" vgap="5">
+      <GridPane hgap="5" prefHeight="337.0" prefWidth="300.0" vgap="5">
           <columnConstraints>
               <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
               <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" />
           </columnConstraints>
          <children>
          
-             <Label text="Mittente:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-             <Label text="Destinatari:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-             <Label text="Oggetto:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-         	 <Label text="Data:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-         	 <Label text="Testo:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+             <Label text="Sender:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+             <Label text="Recipients:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+             <Label text="Subject:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+         	 <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+         	 <Label text="Text:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
          
-             <TextField fx:id="mittenteField" GridPane.columnIndex="1" GridPane.rowIndex="0" editable="false"/>
-             <TextField fx:id="destinatarioField" GridPane.columnIndex="1" GridPane.rowIndex="1" editable="false"/>
-             <TextField fx:id="argomentoField" GridPane.columnIndex="1" GridPane.rowIndex="2" editable="false"/>
-             <TextField fx:id="dateField" GridPane.columnIndex="1" GridPane.rowIndex="3" editable="false"/>
-         	 <TextArea fx:id="testoField" GridPane.columnIndex="1" GridPane.rowIndex="4" layoutX="61.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" editable="false"/>
+             <TextField fx:id="mittenteField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+             <TextField fx:id="destinatarioField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+             <TextField fx:id="argomentoField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+             <TextField fx:id="dateField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         	 <TextArea fx:id="testoField" editable="false" layoutX="61.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          	 
          </children>  
           
           <padding>
-              <Insets bottom="10" left="10" right="10" top="97" />
+              <Insets bottom="10.0" left="10.0" right="10.0" top="70.0" />
           </padding>
          <rowConstraints>
             <RowConstraints />
@@ -46,18 +46,18 @@
          </rowConstraints>
          
       </GridPane>
-      <GridPane prefHeight="187.0" prefWidth="297.0">
+      <GridPane prefHeight="123.0" prefWidth="300">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="156.0" minWidth="10.0" prefWidth="99.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="175.0" minWidth="10.0" prefWidth="95.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="175.0" minWidth="10.0" prefWidth="106.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="63.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="66.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="28.0" minHeight="0.0" prefHeight="12.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="buttonForward" alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="77.0" text="Forward" textAlignment="CENTER" textFill="BLUE" textOverrun="CLIP">
+            <Button fx:id="buttonForward" alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="84.0" text="Forward" textAlignment="CENTER" textOverrun="CLIP">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
@@ -65,10 +65,10 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </opaqueInsets>
                <GridPane.margin>
-                  <Insets bottom="5.0" left="35.0" right="5.0" top="5.0" />
+                  <Insets left="10.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="buttonReply" alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="77.0" text="Reply" textAlignment="CENTER" textFill="GREEN" textOverrun="CLIP" GridPane.rowIndex="1">
+            <Button fx:id="buttonReply" alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="84.0" text="Reply" textAlignment="CENTER" textOverrun="CLIP" GridPane.rowIndex="1">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
@@ -76,20 +76,36 @@
                   <Insets />
                </opaqueInsets>
                <GridPane.margin>
-                  <Insets bottom="5.0" left="35.0" right="5.0" top="5.0" />
+                  <Insets left="10.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="buttonDelete" alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="77.0" text="Delete" textAlignment="CENTER" textFill="#ff4848" textOverrun="CLIP" GridPane.columnIndex="1">
+            <Button fx:id="buttonDelete" alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="83.0" text="Delete" textAlignment="CENTER" textOverrun="CLIP" GridPane.columnIndex="1">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
                <GridPane.margin>
-                  <Insets bottom="5.0" left="35.0" right="5.0" top="5.0" />
+                  <Insets left="10.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="buttonWriteNew" mnemonicParsing="false" prefHeight="47.0" prefWidth="77.0" text="Write New" textFill="#ff6a00" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Button fx:id="buttonWriteNew" mnemonicParsing="false" prefHeight="47.0" prefWidth="84.0" text="Write New" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets bottom="5.0" left="35.0" right="5.0" top="5.0" />
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="buttonTrash" alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="85.0" text="Open Trash" textAlignment="CENTER" textOverrun="CLIP" GridPane.columnIndex="2">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+               <GridPane.margin>
+                  <Insets left="10.0" right="5.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="buttonLogOut" alignment="BASELINE_CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="85.0" text="LogOut" textAlignment="CENTER" textOverrun="CLIP" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+               <GridPane.margin>
+                  <Insets left="10.0" right="5.0" />
                </GridPane.margin>
             </Button>
          </children>

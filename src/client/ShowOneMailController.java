@@ -37,6 +37,12 @@ public class ShowOneMailController {
 
 	@FXML
 	private Button buttonWriteNew;
+	
+	@FXML
+	private Button buttonTrash;
+	
+	@FXML
+	private Button buttonLogOut;
 
 	private CasellaPostaViewModel model;
 
@@ -64,6 +70,9 @@ public class ShowOneMailController {
 				destinatarioField.setText("");
 				argomentoField.setText("");
 				testoField.setText("");
+				buttonDelete.setDisable(true);
+				buttonForward.setDisable(true);
+				buttonReply.setDisable(true);
 			} else {
 				dateField.textProperty().bindBidirectional(newEmail.dateProperty());
 				mittenteField.textProperty().bindBidirectional(newEmail.mittenteProperty());
@@ -71,8 +80,16 @@ public class ShowOneMailController {
 				argomentoField.textProperty().bindBidirectional(newEmail.argomentoProperty());
 				testoField.textProperty().bindBidirectional(newEmail.testoProperty());
 				buttonDelete.setDisable(false);
+				buttonForward.setDisable(false);
+				buttonReply.setDisable(false);
 			}
 		});
+		
+		if(model.getCurrentEmail() == null) {
+			buttonForward.setDisable(true);
+			buttonReply.setDisable(true);
+			buttonDelete.setDisable(true);
+		}
 
 		buttonForward.setOnAction((ActionEvent e) -> {
 
@@ -93,7 +110,6 @@ public class ShowOneMailController {
 				
 				model.getMessageList().remove(toDelete);
 				model.setCurrentEmail(null);
-				buttonDelete.setDisable(true);
 			}
 			if (model.getMessageList().size() == 0) {
 				// manca il controllo che lo riabilita se da ZERO messaggi torna ad essercene ALMENO UNO (riga 73 testare)

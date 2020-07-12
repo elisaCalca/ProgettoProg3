@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -114,6 +115,20 @@ public class MailUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+	}
+	
+	/*
+	 * Controlla se un indirizzo email è sintatticamente corretto
+	 */
+	public static boolean isValidAddress(String address) {
+		String[] points = address.split(Pattern.quote("."));
+		if(points.length == 3) {
+			String[] at = points[1].split("@");
+			if(at.length == 2) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
