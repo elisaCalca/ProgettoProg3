@@ -128,4 +128,23 @@ public class Email {
 		setTesto(testo);
 	}
 	
+	public boolean equals(Email em) {
+		if( this.getId() == em.getId() &&
+			this.getDate().equals(em.getDate()) &&
+			this.getMittente().equals(em.getMittente()) &&
+			this.getDestinatari().equals(em.getDestinatari()) &&
+			this.getArgomento().equals(em.getArgomento()) &&
+			this.getTesto().equals(em.getTesto())				
+		) {
+			System.out.println("siamo due email uguali" + this.getArgomento());
+			return true;
+		}
+		System.out.println("diverse" + this.getArgomento());
+		return false;
+	}
+	
 }
+
+
+
+

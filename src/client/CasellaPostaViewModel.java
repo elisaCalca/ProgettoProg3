@@ -84,11 +84,20 @@ public class CasellaPostaViewModel {
 		List<Email> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + getCurrentUser() + "_trash.json");
 		for(Email em : emails) {
 			//Elisa.Calcaterra@mymail.com
-			if(em.getDestinatari().toLowerCase().contains(getCurrentUser().toLowerCase()) && !trash.contains(em)) {
+			if(em.getDestinatari().toLowerCase().contains(getCurrentUser().toLowerCase()) && !isTrashed(em, trash)) {
 				messageList.add(em);
 			}
 		}
 		orderByDateDesc();
+	}
+	
+	private boolean isTrashed(Email toCheck, List<Email> trash) {
+		for(Email em : trash) {
+			if(em.equals(toCheck)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private void orderByDateDesc() {

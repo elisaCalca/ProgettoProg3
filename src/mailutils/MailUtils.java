@@ -81,19 +81,29 @@ public class MailUtils {
 	@SuppressWarnings("unchecked")
 	public static void writeEmailsInJSON(String filepath, List<Email> emails) {
 
-		JSONObject jsonTrash = new JSONObject();
 		JSONArray trashArray = new JSONArray();
 		
 		for(Email em : emails) {
+
+			JSONObject jsonTrash = new JSONObject();
+			JSONObject jsonEmail = new JSONObject();
+			jsonEmail.put("id", em.getId()+"");
+			jsonEmail.put("date", em.getDate());
+			jsonEmail.put("mittente", em.getMittente());
 			
-			jsonTrash.put("email", em);//bisogna passargli l'hashmap con la mail
+			JSONArray jsonDest = new JSONArray();
+			String[] destinatari = em.getDestinatari().split(";");
+			for(String des : destinatari) {
+				jsonDest.add(des);
+			}
 			
-//			jsonTrash.put("id", em.getId()+"");
-//			jsonTrash.put("date", em.getDate());
-//			jsonTrash.put("mittente", em.getMittente());
-//			jsonTrash.put("destinatari", em.getDestinatari());
-//			jsonTrash.put("argomento", em.getArgomento());
-//			jsonTrash.put("testo", em.getTesto());
+			jsonEmail.put("destinatari", jsonDest);
+			
+			jsonEmail.put("argomento", em.getArgomento());
+			jsonEmail.put("testo", em.getTesto());
+			
+			jsonTrash.put("email", (JSONObject)jsonEmail);//bisogna passargli l'hashmap con la mail
+			
 			trashArray.add(jsonTrash);
 		}
 		
