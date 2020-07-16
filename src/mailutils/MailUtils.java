@@ -103,7 +103,7 @@ public class MailUtils {
 			jsonEmail.put("argomento", em.getArgomento());
 			jsonEmail.put("testo", em.getTesto());
 			
-			jsonTrash.put("email", (JSONObject)jsonEmail);//bisogna passargli l'hashmap con la mail
+			jsonTrash.put("email", (JSONObject)jsonEmail);
 			
 			trashArray.add(jsonTrash);
 		}

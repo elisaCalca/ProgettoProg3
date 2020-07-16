@@ -1,5 +1,6 @@
 package client;
 
+import java.util.Date;
 import java.util.List;
 
 import javafx.event.ActionEvent;
@@ -118,7 +119,8 @@ public class ShowOneMailController {
 		});
 
 		buttonWriteNew.setOnAction((ActionEvent e) -> {
-
+			Email newEmail = new Email(8, new Date(), "ciao@ciao.it", "Elisa.Calcaterra@mymail.com", "prova", "testoprova");
+			model.addMessage(newEmail);
 		});
 
 	}

@@ -1,5 +1,10 @@
 package client;
 
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Scanner;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -53,6 +58,16 @@ public class LogInController {
 	}
 	
 	private void generateClient(Stage primaryStage, String name) throws Exception {
+		
+		//Stabilire la connessione con il Server - capire se messo qui va bene
+		Socket link = new Socket(InetAddress.getLocalHost(), 1234);
+		Scanner input = new Scanner(link.getInputStream());
+		PrintWriter output = new PrintWriter(link.getOutputStream(), true);
+		output.println("In attesa di dati...");
+		String inputS = input.nextLine();
+		link.close();
+		//
+		
 		BorderPane root = new BorderPane();
 		FXMLLoader listLoader = new FXMLLoader(getClass().getResource("list.fxml"));
 		root.setLeft(listLoader.load());
