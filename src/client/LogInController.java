@@ -64,7 +64,7 @@ public class LogInController {
 		Scanner input = new Scanner(link.getInputStream());
 		PrintWriter output = new PrintWriter(link.getOutputStream(), true);
 		output.println("In attesa di dati...");
-		String inputS = input.nextLine();
+//		String inputS = input.nextLine();
 		link.close();
 		//
 		
