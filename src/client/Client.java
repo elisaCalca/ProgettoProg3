@@ -1,31 +1,38 @@
 package client;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Scanner;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
+public class Client {
 
-public class Client extends Application{
-
-	public static void main(String[] args) {
-		launch(args);
+	private Socket s = null;
+	private InetAddress ip;
+	private int port = 1234;
+	
+	public void go() throws UnknownHostException, IOException {
+		ip = InetAddress.getByName("127.0.0.1"); 	//localhost
+		s = new Socket(ip, port);
+		try {
+			Scanner input = new Scanner(s.getInputStream());
+			OutputStream o = s.getOutputStream();
+			PrintWriter output = new PrintWriter(o, true);
+			String dato = input.next();	//legge un dato
+			//elabora il dato
+			System.out.println("Dato:" + dato);
+			System.out.println("Premi enter per mandare la ricevuta");
+//			new Scanner(System.in).next();
+			output.println("ricevuto!");	//manda un dato
+		} catch(Exception exc) {
+			exc.printStackTrace();
+		} finally {
+			//chiude sempre la connessione ed esce
+			s.close();
+		}
 	}
-
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		BorderPane root = new BorderPane();
-		FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("login.fxml"));
-		root.setCenter(loginLoader.load());
-		
-		LogInController logInController = loginLoader.getController();
-		logInController.init();
-		
-		Scene scene = new Scene(root, 495, 200);
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}
-
+	
 }

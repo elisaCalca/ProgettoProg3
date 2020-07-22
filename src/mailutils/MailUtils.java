@@ -14,20 +14,21 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import client.Email;
+import client.EmailModel;
 
 public class MailUtils {
 	
 	/*
 	 * Legge le Email presenti in un file .json e le restituisce in una lista
 	 */
-	public static List<Email> readEmailsFromJSON(String filepath) {
+	public static List<EmailModel> readEmailsFromJSON(String filepath) throws IOException {
 		
-		List<Email> emails = new ArrayList<Email>();
+		List<EmailModel> emails = new ArrayList<EmailModel>();
 		
 		JSONParser parser = new JSONParser();
+		FileReader fReader = new FileReader(filepath);
 		try {
-			JSONArray emailList = (JSONArray) parser.parse(new FileReader(filepath));;
+			JSONArray emailList = (JSONArray) parser.parse(fReader);;
 			
 			for (int index = 0; index < emailList.size(); index++) {
 				JSONObject jsonAtt = (JSONObject)emailList.get(index);
@@ -51,7 +52,7 @@ public class MailUtils {
 					strDest.append(";");
 				}
 			
-				emails.add(new Email(id, date, mittente, strDest.toString(), argomento, testo));
+				emails.add(new EmailModel(id, date, mittente, strDest.toString(), argomento, testo));
 			}
 			
 		} catch(FileNotFoundException e) {
@@ -70,8 +71,9 @@ public class MailUtils {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			fReader.close();
 		}
-		
 		return emails;
 		
 	}
@@ -80,11 +82,11 @@ public class MailUtils {
 	 * Scrive in un file .json le email presenti nella lista
 	 */
 	@SuppressWarnings("unchecked")
-	public static void writeEmailsInJSON(String filepath, List<Email> emails) {
+	public static void writeEmailsInJSON(String filepath, List<EmailModel> emails) throws IOException {
 
 		JSONArray trashArray = new JSONArray();
 		
-		for(Email em : emails) {
+		for(EmailModel em : emails) {
 
 			JSONObject jsonTrash = new JSONObject();
 			JSONObject jsonEmail = new JSONObject();
@@ -109,11 +111,14 @@ public class MailUtils {
 		}
 		
 		//Write JSON file
-        try (FileWriter file = new FileWriter(filepath)) {
+    	FileWriter file = new FileWriter(filepath);
+        try {
             file.write(trashArray.toJSONString());
             file.flush();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+        	file.close();
         }
 	}
 	
@@ -131,6 +136,15 @@ public class MailUtils {
 		return false;
 	}
 
+	/*
+	 * Restituisce true se una stringa è vuota o null
+	 */
+	public static boolean isBlankOrEmpty(String str) {
+		if(str.isEmpty() || str.equals(null)) {
+			return true;
+		}
+		return false;
+	}
 }
 
 

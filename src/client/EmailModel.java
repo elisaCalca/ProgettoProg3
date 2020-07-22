@@ -10,7 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class Email {
+public class EmailModel {
 	
 	/*
 	 * Definizione della property ID
@@ -117,9 +117,9 @@ public class Email {
 	}
 	
 	/*
-	 * Costruttore
+	 * Costruttori
 	 */
-	public Email(int id, Date date, String mittente, String destinatari, String argomento, String testo) {
+	public EmailModel(int id, Date date, String mittente, String destinatari, String argomento, String testo) {
 		setId(id);
 		setDate(date);
 		setMittente(mittente);
@@ -128,17 +128,34 @@ public class Email {
 		setTesto(testo);
 	}
 	
-	public boolean equals(Email em) {
+	public EmailModel() {
+		
+	}
+	
+	/*
+	 * Metodi di utility
+	 */
+	public boolean equals(EmailModel em) {
 		if( this.getId() == em.getId() &&
 			this.getDate().equals(em.getDate()) &&
 			this.getMittente().equals(em.getMittente()) &&
 			this.getDestinatari().equals(em.getDestinatari()) &&
 			this.getArgomento().equals(em.getArgomento()) &&
 			this.getTesto().equals(em.getTesto())				
-		) {
+			) {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		return (this.getId() + " " + 
+				this.getDate() + " " +
+				this.getMittente() + " " +
+				this.getArgomento() + " " +
+				this.getTesto() + " " +
+				this.getDestinatari());
 	}
 	
 }

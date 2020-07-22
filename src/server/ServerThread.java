@@ -24,7 +24,7 @@ public class ServerThread extends Thread {
 			Scanner input = new Scanner(i);
 			output.println("Ciao caro client!");	//spedisce un dato
 			String dato = input.next();		//legge un dato
-			System.out.println(dato);	//elabora il dato
+			System.out.println("Dato: " + dato);	//elabora il dato
 			
 		} catch (IOException e) {
 			System.err.println("I/O Exception");

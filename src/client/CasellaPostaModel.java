@@ -1,12 +1,7 @@
 package client;
 
-import java.io.FileReader;
-import java.util.Date;
+import java.io.IOException;
 import java.util.List;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
@@ -17,7 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import mailutils.MailUtils;
 
-public class CasellaPostaViewModel {
+public class CasellaPostaModel {
 	
 	/*
 	 * Definizione della property currentUser
@@ -39,24 +34,24 @@ public class CasellaPostaViewModel {
 	/*
 	 * Definizione della property currentEmail
 	 */
-	private final ObjectProperty<Email> currentEmail = new SimpleObjectProperty<>(null);
+	private final ObjectProperty<EmailModel> currentEmail = new SimpleObjectProperty<>(null);
 
-	public final ObjectProperty<Email> currentEmailProperty() {
+	public final ObjectProperty<EmailModel> currentEmailProperty() {
 		return this.currentEmail;
 	}
 	
-	public final Email getCurrentEmail() {
+	public final EmailModel getCurrentEmail() {
 		return this.currentEmailProperty().get();
 	}
 	
-	public final void setCurrentEmail(Email email) {
+	public final void setCurrentEmail(EmailModel email) {
 		this.currentEmailProperty().set(email);
 	}
 	
 	/*
 	 * Definizione dell'ObservableList messageList
 	 */
-	private ObservableList<Email> messageList = FXCollections.observableArrayList(
+	private ObservableList<EmailModel> messageList = FXCollections.observableArrayList(
 			message -> new Observable[] {
 					message.idProperty(),
 					message.dateProperty(),
@@ -66,11 +61,11 @@ public class CasellaPostaViewModel {
 					message.testoProperty()
 			});
 			
-	public ObservableList<Email> getMessageList() {
+	public ObservableList<EmailModel> getMessageList() {
 		return messageList;
 	}
 	
-	public void addMessage(Email emailReceived) {
+	public void addMessage(EmailModel emailReceived) {
 		messageList.add(emailReceived);
 		orderByDateDesc();
 	}
@@ -79,10 +74,11 @@ public class CasellaPostaViewModel {
 	 * Inserisce i messaggi nella messageList
 	 * Ignora il messaggio se l'utente loggato non è tra i destinatari
 	 */
-	public void loadMessageList() {
-		List<Email> emails = MailUtils.readEmailsFromJSON("Files/emails.json");
-		List<Email> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + getCurrentUser() + "_trash.json");
-		for(Email em : emails) {
+	public void loadMessageList() throws IOException {
+		//invece che leggerli direttamente dal file dovrà farseli spedire dalla socket
+		List<EmailModel> emails = MailUtils.readEmailsFromJSON("Files/emails.json");
+		List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + getCurrentUser() + "_trash.json");
+		for(EmailModel em : emails) {
 			//Elisa.Calcaterra@mymail.com
 			if(em.getDestinatari().toLowerCase().contains(getCurrentUser().toLowerCase()) && !isTrashed(em, trash)) {
 				messageList.add(em);
@@ -91,8 +87,8 @@ public class CasellaPostaViewModel {
 		orderByDateDesc();
 	}
 	
-	private boolean isTrashed(Email toCheck, List<Email> trash) {
-		for(Email em : trash) {
+	private boolean isTrashed(EmailModel toCheck, List<EmailModel> trash) {
+		for(EmailModel em : trash) {
 			if(em.equals(toCheck)) {
 				return true;
 			}
@@ -101,7 +97,7 @@ public class CasellaPostaViewModel {
 	}
 	
 	private void orderByDateDesc() {
-		Email temp;
+		EmailModel temp;
 		for(int i = 0; i < messageList.size(); i++) {
 			for(int j = i+1; j < messageList.size(); j++) {
 				if((messageList.get(i).getDate()).compareTo(messageList.get(j).getDate()) < 0) {

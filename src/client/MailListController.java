@@ -12,15 +12,15 @@ public class MailListController {
 	private Label indUtente;
 	
 	@FXML
-	private ListView<Email> messageList;
+	private ListView<EmailModel> messageList;
 	
-	private CasellaPostaViewModel model;
+	private CasellaPostaModel model;
 	
 	public void initData(String name) {
 		indUtente.setText("Mailbox of " + name);
 	}
 	
-	public void initModel(CasellaPostaViewModel model) {
+	public void initModel(CasellaPostaModel model) {
 		if(this.model != null) {
 			throw new IllegalStateException("Model can only be initialized once!");
 		}
@@ -43,9 +43,9 @@ public class MailListController {
 		/*
 		 * Concatena il contenuto delle righe della ListView
 		 */
-		messageList.setCellFactory(lv -> new ListCell<Email>() {
+		messageList.setCellFactory(lv -> new ListCell<EmailModel>() {
 			@Override
-			public void updateItem(Email email, boolean empty) {
+			public void updateItem(EmailModel email, boolean empty) {
 				super.updateItem(email, empty);
 				if(empty) {
 					setText(null);

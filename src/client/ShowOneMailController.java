@@ -1,13 +1,18 @@
 package client;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import mailutils.MailUtils;
 
 public class ShowOneMailController {
@@ -45,16 +50,22 @@ public class ShowOneMailController {
 	@FXML
 	private Button buttonLogOut;
 
-	private CasellaPostaViewModel model;
+	private CasellaPostaModel model;
 
-	public void initModel(CasellaPostaViewModel model) {
+	public void initModel(CasellaPostaModel model) {
 		if (this.model != null) {
 			throw new IllegalStateException("Model can only be initialized once!");
 		}
 
 		this.model = model;
 
-		model.loadMessageList(); // aggiunto per far caricare le email del file nella casella di posta
+		//la lettura è da far fare al server, questo metodo dovrà ascoltare la socket che riceve dal server
+		try {
+			model.loadMessageList();// aggiunto per far caricare le email del file nella casella di posta 
+		} catch (IOException e2) {
+			e2.printStackTrace();
+			System.out.println("An ERROR occured while loading message list");
+		} 
 
 		//ascolta l'email che è attualmente selezionata
 		model.currentEmailProperty().addListener((obs, oldEmail, newEmail) -> {
@@ -98,7 +109,9 @@ public class ShowOneMailController {
 
 		buttonReply.setOnAction((ActionEvent e) -> {
 			if (model.getCurrentEmail() == null) {
-				System.out.println("miao");
+				System.out.println("MALE perchè in questo caso il bottone deve essere disabilitato.");
+			} else {
+				
 			}
 		});
 
@@ -106,8 +119,13 @@ public class ShowOneMailController {
 			if (model.getMessageList().size() > 0) {
 				
 				//Scrive la mail nel cestino dell'utente
-				Email toDelete = model.currentEmailProperty().get();
-				sendEmailToTrash(toDelete);
+				EmailModel toDelete = model.currentEmailProperty().get();
+				try {
+					sendEmailToTrash(toDelete);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					System.out.println("An ERROR occured while sending email to Trash");
+				}
 				
 				model.getMessageList().remove(toDelete);
 				model.setCurrentEmail(null);
@@ -119,8 +137,38 @@ public class ShowOneMailController {
 		});
 
 		buttonWriteNew.setOnAction((ActionEvent e) -> {
-			Email newEmail = new Email(8, new Date(), "ciao@ciao.it", "Elisa.Calcaterra@mymail.com", "prova", "testoprova");
-			model.addMessage(newEmail);
+			//apre una finestra su un thread parallelo che fa scrivere una nuova email
+			EmailModel newEmailModel = new EmailModel();
+			newEmailModel.setMittente(model.currentUserProperty().get());
+			
+			try {
+				Stage primaryStage = new Stage();
+				
+				BorderPane root = new BorderPane();
+				FXMLLoader newEmailLoader = new FXMLLoader(getClass().getResource("writeemail.fxml"));
+				root.setCenter(newEmailLoader.load());
+				WriteEmailController writeEmailController = newEmailLoader.getController();
+				writeEmailController.initModel(newEmailModel);
+				
+				Scene scene = new Scene(root, 755, 450);
+				primaryStage.setScene(scene);
+				primaryStage.show();
+				
+				Thread threadWriteEmail = new Thread(writeEmailController);
+				threadWriteEmail.setDaemon(true);
+				threadWriteEmail.start();
+				
+			} catch (IOException exc) {
+				exc.printStackTrace();
+			}
+		});
+		
+		buttonTrash.setOnAction((ActionEvent e) -> {
+			
+		});
+		
+		buttonLogOut.setOnAction((ActionEvent e) -> {
+			
 		});
 
 	}
@@ -130,9 +178,9 @@ public class ShowOneMailController {
 	 * Aggiunge la nuova email alla lista ottenuta dal trash
 	 * Riscrive il trash contenente la nuova email
 	 */
-	private void sendEmailToTrash(Email trash) {
+	private void sendEmailToTrash(EmailModel trash) throws IOException {
 		String filepath = "Files/Trash/" + model.getCurrentUser() + "_trash.json";
-		List<Email> trashList = MailUtils.readEmailsFromJSON(filepath);
+		List<EmailModel> trashList = MailUtils.readEmailsFromJSON(filepath);
 		trashList.add(trash);
 		MailUtils.writeEmailsInJSON(filepath, trashList);
 	}

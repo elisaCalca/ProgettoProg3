@@ -5,6 +5,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
+import javax.swing.JFrame;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,18 +32,21 @@ public class LogInController {
 	@FXML
 	private Label errorMsg2;
 	
-	public void init() {
+	public void init(Stage primaryStage) {
 		errorMsg1.setVisible(false);
 		errorMsg2.setVisible(false);
+		
 		buttonLogIn.setOnAction((ActionEvent e) -> {
 			String address = indirizzo.getText();
-			if(!isBlankOrEmpty(address) && MailUtils.isValidAddress(address)) {
+			if(!MailUtils.isBlankOrEmpty(address) && MailUtils.isValidAddress(address)) {
 				errorMsg1.setVisible(false);
 				errorMsg2.setVisible(false);
 				try {
 					generateClient(new Stage(), indirizzo.getText());
 				} catch (Exception exc) {
 					exc.printStackTrace();
+				} finally {
+					primaryStage.hide();
 				}
 			} else {
 				errorMsg1.setVisible(true);
@@ -50,22 +55,20 @@ public class LogInController {
 		});
 	}
 	
-	private static boolean isBlankOrEmpty(String str) {
-		if(str.isEmpty() || str.equals(null)) {
-			return true;
-		}
-		return false;
-	}
-	
 	private void generateClient(Stage primaryStage, String name) throws Exception {
 		
 		//Stabilire la connessione con il Server - capire se messo qui va bene
-		Socket link = new Socket(InetAddress.getLocalHost(), 1234);
-		Scanner input = new Scanner(link.getInputStream());
-		PrintWriter output = new PrintWriter(link.getOutputStream(), true);
-		output.println("In attesa di dati...");
-//		String inputS = input.nextLine();
-		link.close();
+//		Socket link = new Socket(InetAddress.getLocalHost(), 1234);
+//		Scanner input = new Scanner(link.getInputStream());
+//		PrintWriter output = new PrintWriter(link.getOutputStream(), true);
+//		output.println("In attesa di dati...");
+////		String inputS = input.nextLine();
+//		link.close();
+		
+		
+//		Client c = new Client();
+//		c.go();
+		
 		//
 		
 		BorderPane root = new BorderPane();
@@ -78,15 +81,16 @@ public class LogInController {
 		root.setRight(editorLoader.load());	
 		ShowOneMailController editorController = editorLoader.getController();
 		
-		CasellaPostaViewModel casellaPosta = new CasellaPostaViewModel();
+		CasellaPostaModel casellaPosta = new CasellaPostaModel();
 
-		casellaPosta.currentUserProperty().set(indirizzo.getText());
+		casellaPosta.currentUserProperty().set(name);
 		listController.initModel(casellaPosta);
 		editorController.initModel(casellaPosta);
 		
 		Scene scene = new Scene(root, 755, 450);
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		
 	}
 
 }
