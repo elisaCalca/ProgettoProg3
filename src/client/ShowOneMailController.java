@@ -3,7 +3,9 @@ package client;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -109,9 +111,28 @@ public class ShowOneMailController {
 
 		buttonReply.setOnAction((ActionEvent e) -> {
 			if (model.getCurrentEmail() == null) {
-				System.out.println("MALE perchè in questo caso il bottone deve essere disabilitato.");
+				System.out.println("MALE perchè in questo caso il bottone doveva essere disabilitato!");
 			} else {
-				
+				EmailModel replyEmailModel = new EmailModel();
+				replyEmailModel.setMittente(model.getCurrentUser());
+				replyEmailModel.setArgomento(model.getCurrentEmail().getArgomento());
+				replyEmailModel.setDestinatari(model.getCurrentEmail().getMittente());	//il destinatario della risposta è il mittente
+				try {
+					Stage stage = new Stage();
+					
+					BorderPane root = new BorderPane();
+					FXMLLoader replyEmailLoader = new FXMLLoader(getClass().getResource("writeemail.fxml"));
+					root.setCenter(replyEmailLoader.load());
+					WriteEmailController writeEmailController = replyEmailLoader.getController();
+					writeEmailController.initModel(replyEmailModel, "reply");
+					
+					Scene scene = new Scene(root, 600, 430);
+					stage.setScene(scene);
+					stage.show();
+					
+				} catch (IOException exc) {
+					exc.printStackTrace();
+				}
 			}
 		});
 
@@ -137,38 +158,38 @@ public class ShowOneMailController {
 		});
 
 		buttonWriteNew.setOnAction((ActionEvent e) -> {
-			//apre una finestra su un thread parallelo che fa scrivere una nuova email
+//			The Javadoc of Stage states: Stage objects must be constructed and modified on the JavaFX Application Thread.
 			EmailModel newEmailModel = new EmailModel();
-			newEmailModel.setMittente(model.currentUserProperty().get());
-			
+			newEmailModel.setMittente(model.getCurrentUser());
 			try {
-				Stage primaryStage = new Stage();
+				Stage stage = new Stage();
 				
 				BorderPane root = new BorderPane();
 				FXMLLoader newEmailLoader = new FXMLLoader(getClass().getResource("writeemail.fxml"));
 				root.setCenter(newEmailLoader.load());
 				WriteEmailController writeEmailController = newEmailLoader.getController();
-				writeEmailController.initModel(newEmailModel);
+				writeEmailController.initModel(newEmailModel, "writenew");
 				
-				Scene scene = new Scene(root, 755, 450);
-				primaryStage.setScene(scene);
-				primaryStage.show();
-				
-				Thread threadWriteEmail = new Thread(writeEmailController);
-				threadWriteEmail.setDaemon(true);
-				threadWriteEmail.start();
+				Scene scene = new Scene(root, 600, 430);
+				stage.setScene(scene);
+				stage.show();
 				
 			} catch (IOException exc) {
 				exc.printStackTrace();
 			}
+			
 		});
-		
+
+		//	Elisa.Calcaterra@mymail.com
 		buttonTrash.setOnAction((ActionEvent e) -> {
+			buttonTrash.setDisable(true);//ok, ma poi come e quando lo riattivo???
 			
 		});
 		
+		//alla chiusura tramite bottone LogOut termina tutti i thread JavaFX
 		buttonLogOut.setOnAction((ActionEvent e) -> {
-			
+			Platform.exit();
+	        System.exit(0);
 		});
 
 	}

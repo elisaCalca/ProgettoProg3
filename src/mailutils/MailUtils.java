@@ -137,32 +137,14 @@ public class MailUtils {
 	}
 
 	/*
-	 * Restituisce true se una stringa è vuota o null
+	 * Restituisce true se una stringa è null o vuota
 	 */
-	public static boolean isBlankOrEmpty(String str) {
-		if(str.isEmpty() || str.equals(null)) {
+	public static boolean isNullOrEmpty(String str) {
+		if(str == null || str.isEmpty()) {
 			return true;
 		}
 		return false;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

@@ -1,7 +1,5 @@
 package client;
 
-import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,6 +14,7 @@ public class ClientApplication extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		
 		BorderPane root = new BorderPane();
 		FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("login.fxml"));
 		root.setCenter(loginLoader.load());
@@ -26,6 +25,7 @@ public class ClientApplication extends Application{
 		Scene scene = new Scene(root, 495, 200);
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		
 	}
 
 }

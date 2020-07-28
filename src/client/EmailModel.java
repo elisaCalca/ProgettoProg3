@@ -2,6 +2,7 @@ package client;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -129,7 +130,8 @@ public class EmailModel {
 	}
 	
 	public EmailModel() {
-		
+		int rand = new Random().nextInt();
+		setId((rand > 0 ? rand : rand * -1));
 	}
 	
 	/*
@@ -142,7 +144,7 @@ public class EmailModel {
 			this.getDestinatari().equals(em.getDestinatari()) &&
 			this.getArgomento().equals(em.getArgomento()) &&
 			this.getTesto().equals(em.getTesto())				
-			) {
+		) {
 			return true;
 		}
 		return false;

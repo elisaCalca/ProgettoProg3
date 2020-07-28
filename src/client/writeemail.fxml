@@ -8,6 +8,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="416.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.WriteEmailController">
    <children>
+   	  <Label fx:id="nameSender"/>
       <Label prefHeight="17.0" prefWidth="87.0" text="To:" />
       <TextField fx:id="emailTo"/>
       <Label text="Subject:" />
