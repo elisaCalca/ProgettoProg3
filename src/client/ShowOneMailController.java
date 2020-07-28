@@ -106,7 +106,21 @@ public class ShowOneMailController {
 		}
 
 		buttonForward.setOnAction((ActionEvent e) -> {
-
+			if (model.getCurrentEmail() == null) {
+				System.out.println("MALE perchè in questo caso il bottone doveva essere disabilitato!");
+			} else {
+				EmailModel forwardEmailModel = new EmailModel();
+				forwardEmailModel.setMittente(model.getCurrentUser());
+				forwardEmailModel.setArgomento(model.getCurrentEmail().getArgomento());
+				forwardEmailModel.setTesto(model.getCurrentEmail().getTesto());
+				try {
+					
+					OpenWriteWindow(forwardEmailModel);
+					
+				} catch (IOException exc) {
+					exc.printStackTrace();
+				}
+			}
 		});
 
 		buttonReply.setOnAction((ActionEvent e) -> {
@@ -118,17 +132,8 @@ public class ShowOneMailController {
 				replyEmailModel.setArgomento(model.getCurrentEmail().getArgomento());
 				replyEmailModel.setDestinatari(model.getCurrentEmail().getMittente());	//il destinatario della risposta è il mittente
 				try {
-					Stage stage = new Stage();
 					
-					BorderPane root = new BorderPane();
-					FXMLLoader replyEmailLoader = new FXMLLoader(getClass().getResource("writeemail.fxml"));
-					root.setCenter(replyEmailLoader.load());
-					WriteEmailController writeEmailController = replyEmailLoader.getController();
-					writeEmailController.initModel(replyEmailModel, "reply");
-					
-					Scene scene = new Scene(root, 600, 430);
-					stage.setScene(scene);
-					stage.show();
+					OpenWriteWindow(replyEmailModel);
 					
 				} catch (IOException exc) {
 					exc.printStackTrace();
@@ -162,17 +167,8 @@ public class ShowOneMailController {
 			EmailModel newEmailModel = new EmailModel();
 			newEmailModel.setMittente(model.getCurrentUser());
 			try {
-				Stage stage = new Stage();
 				
-				BorderPane root = new BorderPane();
-				FXMLLoader newEmailLoader = new FXMLLoader(getClass().getResource("writeemail.fxml"));
-				root.setCenter(newEmailLoader.load());
-				WriteEmailController writeEmailController = newEmailLoader.getController();
-				writeEmailController.initModel(newEmailModel, "writenew");
-				
-				Scene scene = new Scene(root, 600, 430);
-				stage.setScene(scene);
-				stage.show();
+				OpenWriteWindow(newEmailModel);
 				
 			} catch (IOException exc) {
 				exc.printStackTrace();
@@ -205,6 +201,26 @@ public class ShowOneMailController {
 		trashList.add(trash);
 		MailUtils.writeEmailsInJSON(filepath, trashList);
 	}
-
 	
+	/*
+	 * Apre la view per:
+	 * - scrivere una nuova email
+	 * - inoltrare una email
+	 * - rispondere ad una email
+	 * In base a quale azione lo invoca riceve il model inizializzato nel modo corretto
+	 */
+	private void OpenWriteWindow(EmailModel email) throws IOException{
+		Stage stage = new Stage();
+		
+		BorderPane root = new BorderPane();
+		FXMLLoader newEmailLoader = new FXMLLoader(getClass().getResource("writeemail.fxml"));
+		root.setCenter(newEmailLoader.load());
+		WriteEmailController writeEmailController = newEmailLoader.getController();
+		writeEmailController.initModel(email);
+		
+		Scene scene = new Scene(root, 600, 430);
+		stage.setScene(scene);
+		stage.show();
+	}
+
 }

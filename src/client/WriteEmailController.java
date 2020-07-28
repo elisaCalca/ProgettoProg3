@@ -38,7 +38,7 @@ public class WriteEmailController {
 	private boolean someError = false;
 	
 	
-	public void initModel(EmailModel model, String action) {
+	public void initModel(EmailModel model) {
 		if(this.model != null) {
 			throw new IllegalStateException("Model can only be initialized once!");
 		}
