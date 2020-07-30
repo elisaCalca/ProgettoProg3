@@ -79,10 +79,19 @@ public class CasellaPostaModel {
 		List<EmailModel> emails = MailUtils.readEmailsFromJSON("Files/emails.json");
 		List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + getCurrentUser() + "_trash.json");
 		for(EmailModel em : emails) {
-			//Elisa.Calcaterra@mymail.com
 			if(em.getDestinatari().toLowerCase().contains(getCurrentUser().toLowerCase()) && !isTrashed(em, trash)) {
 				messageList.add(em);
 			}
+		}
+		orderByDateDesc();
+	}
+	
+	public void loadTrashMessageList() throws IOException {
+		//invece che leggerli direttamente dal file dovrà farseli spedire dalla socket
+		List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + getCurrentUser() + "_trash.json");
+		for(EmailModel em : trash) {
+			messageList.add(em);
+			
 		}
 		orderByDateDesc();
 	}

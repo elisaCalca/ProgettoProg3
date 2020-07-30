@@ -2,6 +2,7 @@ package client;
 
 import java.io.IOException;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -42,10 +43,10 @@ public class ShowTrashController {
 		//la lettura è da far fare al server, questo metodo dovrà ascoltare la socket che riceve dal server
 		//mandare al server la richiesta di ricevere il cestino
 		try {
-			model.loadMessageList();// aggiunto per far caricare le email del file nella casella di posta 
+			model.loadTrashMessageList(); 
 		} catch (IOException e2) {
 			e2.printStackTrace();
-			System.out.println("An ERROR occured while loading message list");
+			System.out.println("An ERROR occured while loading trash message list of user " + model.getCurrentUser());
 		}
 		
 		//ascolta l'email che è attualmente selezionata
@@ -80,6 +81,24 @@ public class ShowTrashController {
 			buttonMoveToInbox.setDisable(true);
 			buttonDeletePerm.setDisable(true);
 		}
+		
+		buttonMoveToInbox.setOnAction((ActionEvent e) -> {
+			if(model.getCurrentEmail() != null) {
+				EmailModel toMove = new EmailModel();
+				
+				//inviarla al server che la rimette nella casella principale
+				// e la rimuove dal cestino
+				model.getMessageList().remove(toMove);
+			}
+		});
+		
+		buttonDeletePerm.setOnAction((ActionEvent e) -> {
+			if(model.getCurrentEmail() != null) {
+				EmailModel toDelete = new EmailModel();
+				//inviarla al server per fargliela rimuovere per sempre dal file trash
+				model.getMessageList().remove(toDelete);
+			}
+		});
 		
 	}
 

@@ -84,7 +84,7 @@ public class LogInController {
 		FXMLLoader listLoader = new FXMLLoader(getClass().getResource("list.fxml"));
 		root.setLeft(listLoader.load());
 		MailListController listController = listLoader.getController();
-		listController.initData(name);
+		listController.initData("Mailbox of " + name);
 		
 		FXMLLoader editorLoader = new FXMLLoader(getClass().getResource("showonemail.fxml"));
 		root.setRight(editorLoader.load());	

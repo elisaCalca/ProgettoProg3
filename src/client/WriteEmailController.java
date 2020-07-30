@@ -69,7 +69,7 @@ public class WriteEmailController {
 		emailText.textProperty().bindBidirectional(model.testoProperty());
 		
 		buttonSend.setOnAction((ActionEvent e) -> {
-			msgAllReq.setVisible(false);
+			msgAllReq.setVisible(false);	//non dovrebbe più servire dopo il timer, testare!
 			msgInvalidAddress.setVisible(false);
 			someError = false;
 			if(MailUtils.isNullOrEmpty(emailTo.getText()) ||

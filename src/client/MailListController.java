@@ -17,7 +17,7 @@ public class MailListController {
 	private CasellaPostaModel model;
 	
 	public void initData(String name) {
-		indUtente.setText("Mailbox of " + name);
+		indUtente.setText(name);
 	}
 	
 	public void initModel(CasellaPostaModel model) {
@@ -26,7 +26,7 @@ public class MailListController {
 		}
 		
 		this.model = model;
-		
+	
 		messageList.setItems(model.getMessageList());
 		messageList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			model.setCurrentEmail(newSelection);
