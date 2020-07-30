@@ -49,6 +49,21 @@ public class WriteEmailController {
 		msgInvalidAddress.setVisible(false);
 		nameSender.setText("Sending email as: " + model.getMittente());
 		
+		model.destinatariProperty().addListener((obs, oldVal, newVal) -> {
+			boolean valid = true;
+			String[] address = newVal.trim().split(";");
+			for(String addr : address) {
+				valid = valid ? MailUtils.isValidAddress(addr) : false;
+				if(!valid) {
+					msgInvalidAddress.setVisible(true);
+					buttonSend.setDisable(true);
+				} else {
+					msgInvalidAddress.setVisible(false);
+					buttonSend.setDisable(false);
+				}
+			}
+		});
+		
 		emailTo.textProperty().bindBidirectional(model.destinatariProperty());;
 		emailSubject.textProperty().bindBidirectional(model.argomentoProperty());
 		emailText.textProperty().bindBidirectional(model.testoProperty());
@@ -60,19 +75,18 @@ public class WriteEmailController {
 			if(MailUtils.isNullOrEmpty(emailTo.getText()) ||
 				MailUtils.isNullOrEmpty(emailSubject.getText()) ||
 				MailUtils.isNullOrEmpty(emailText.getText())) {
+				
 				msgAllReq.setVisible(true);
-				someError = true;
-			} else {
-				String addresses = emailTo.getText();
-				if(!MailUtils.isNullOrEmpty(addresses)) {
-					String[] addressesArray = addresses.split(";");
-					for(String addr : addressesArray) {
-						if(!MailUtils.isValidAddress(addr)) {
-							msgInvalidAddress.setVisible(true);
-							someError = true;
-						}
+				new Thread (() -> {
+					try {
+						Thread.sleep(3000);
+						msgAllReq.setVisible(false);
+					} catch (InterruptedException exc) {
+						exc.printStackTrace();
 					}
-				}
+				}).start();
+				
+				someError = true;
 			}
 			if(!someError) {
 				msgAllReq.setVisible(false);

@@ -178,8 +178,32 @@ public class ShowOneMailController {
 
 		//	Elisa.Calcaterra@mymail.com
 		buttonTrash.setOnAction((ActionEvent e) -> {
-			buttonTrash.setDisable(true);//ok, ma poi come e quando lo riattivo???
-			
+//			buttonTrash.setDisable(true);//ok, ma poi come e quando lo riattivo??? -- analizzare bene o rimuovere
+			try {
+				Stage stage = new Stage();
+				BorderPane root = new BorderPane();
+				FXMLLoader listTrashLoader = new FXMLLoader(getClass().getResource("list.fxml"));
+				root.setLeft(listTrashLoader.load());
+				MailListController listTrashController = listTrashLoader.getController();
+				listTrashController.initData(model.currentUserProperty().get());
+				
+				FXMLLoader editorTrashLoader = new FXMLLoader(getClass().getResource("ShowOneMailTrashed.fxml"));
+				root.setRight(editorTrashLoader.load());	
+				ShowTrashController editorTrashController = editorTrashLoader.getController();
+				
+				CasellaPostaModel casellaPosta = new CasellaPostaModel();
+				casellaPosta.currentUserProperty().set(model.currentUserProperty().get());
+				listTrashController.initModel(casellaPosta);
+				editorTrashController.initModel(casellaPosta);
+				
+				Scene scene = new Scene(root, 755, 450);
+				stage.setScene(scene);
+				stage.show();
+				
+			} catch (IOException exc) {
+				exc.printStackTrace();
+			}
+			//inviare al server la richiesta per riempire il cestino
 		});
 		
 		//alla chiusura tramite bottone LogOut termina tutti i thread JavaFX
