@@ -89,6 +89,7 @@ public class ShowTrashController {
 				//inviarla al server che la rimette nella casella principale
 				// e la rimuove dal cestino
 				model.getMessageList().remove(toMove);
+				
 			}
 		});
 		

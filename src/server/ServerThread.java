@@ -10,10 +10,12 @@ import java.util.Scanner;
 public class ServerThread extends Thread {
 	
 	private Socket s = null;
+	private ServerModel model;
 	
-	public ServerThread(Socket socket) {
+	public ServerThread(Socket socket, ServerModel model) {
 		super("ServerThread");
 		s = socket;
+		this.model = model;
 	}
 	
 	public void run() {
@@ -25,6 +27,7 @@ public class ServerThread extends Thread {
 			output.println("Ciao caro client!");	//spedisce un dato
 			String dato = input.next();		//legge un dato
 			System.out.println("Dato: " + dato);	//elabora il dato
+			model.addServerMessage(new ServerMessageModel());
 			
 		} catch (IOException e) {
 			System.err.println("I/O Exception");

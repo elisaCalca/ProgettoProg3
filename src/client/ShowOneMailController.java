@@ -107,9 +107,7 @@ public class ShowOneMailController {
 		}
 
 		buttonForward.setOnAction((ActionEvent e) -> {
-			if (model.getCurrentEmail() == null) {
-				System.out.println("MALE perchè in questo caso il bottone doveva essere disabilitato!");
-			} else {
+			if (model.getCurrentEmail() != null) {
 				EmailModel forwardEmailModel = new EmailModel();
 				forwardEmailModel.setMittente(model.getCurrentUser());
 				forwardEmailModel.setArgomento(model.getCurrentEmail().getArgomento());
@@ -125,9 +123,7 @@ public class ShowOneMailController {
 		});
 
 		buttonReply.setOnAction((ActionEvent e) -> {
-			if (model.getCurrentEmail() == null) {
-				System.out.println("MALE perchè in questo caso il bottone doveva essere disabilitato!");
-			} else {
+			if (model.getCurrentEmail() != null) {
 				EmailModel replyEmailModel = new EmailModel();
 				replyEmailModel.setMittente(model.getCurrentUser());
 				replyEmailModel.setArgomento(model.getCurrentEmail().getArgomento());
@@ -217,7 +213,7 @@ public class ShowOneMailController {
 			
 		});
 		
-		//alla chiusura tramite bottone LogOut termina tutti i thread JavaFX
+		//alla chiusura tramite bottone LogOut termina tutti i thread JavaFX (stessa JVM)
 		buttonLogOut.setOnAction((ActionEvent e) -> {
 			Platform.exit();
 	        System.exit(0);
@@ -235,6 +231,7 @@ public class ShowOneMailController {
 		List<EmailModel> trashList = MailUtils.readEmailsFromJSON(filepath);
 		trashList.add(trash);
 		MailUtils.writeEmailsInJSON(filepath, trashList);
+		//SE IL TRASH è APERTO DEVE AGGIORNARSI AUTOMATICAMENTE!!!
 	}
 	
 	/*

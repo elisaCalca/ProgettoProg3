@@ -41,7 +41,7 @@ public class MailListController {
 		});
 		
 		/*
-		 * Concatena il contenuto delle righe della ListView
+		 * Formatta le righe della ListView
 		 */
 		messageList.setCellFactory(lv -> new ListCell<EmailModel>() {
 			@Override
