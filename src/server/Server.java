@@ -45,7 +45,7 @@ public class Server extends Application{
 	        System.exit(0);
 		});
 		
-		ServerModel server = new ServerModel();
+		ServerModel server = new ServerModel();	//istanzia il model del server
 		
 		new Thread (() ->{
 			try {

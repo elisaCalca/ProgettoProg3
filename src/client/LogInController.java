@@ -3,6 +3,7 @@ package client;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
@@ -48,6 +49,8 @@ public class LogInController {
 					
 					generateClient(new Stage(), indirizzo.getText());
 					
+				} catch (UnknownHostException e1) {
+					//mostrare un popup che dice all'utente che il server è caduto
 				} catch (Exception exc) {
 					exc.printStackTrace();
 				} finally {
@@ -63,16 +66,9 @@ public class LogInController {
 	private void generateClient(Stage primaryStage, String name) throws Exception {
 		
 		//Stabilire la connessione con il Server - capire se messo qui va bene
-//		Socket link = new Socket(InetAddress.getLocalHost(), 1234);
-//		Scanner input = new Scanner(link.getInputStream());
-//		PrintWriter output = new PrintWriter(link.getOutputStream(), true);
-//		output.println("In attesa di dati...");
-////		String inputS = input.nextLine();
-//		link.close();
-		
-		
-//		Client c = new Client();
-//		c.go();
+		Client c = new Client();
+		c.init();	//stabilisce la connessione con il server e inizializza le cose necessarie
+		c.sendToServer("Connessione da parte del client " + name);
 		
 		//alla chiusura della finestra con la X termina tutti i thread JavaFX
 		primaryStage.setOnCloseRequest((WindowEvent e) -> {

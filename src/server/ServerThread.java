@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class ServerThread extends Thread {
 	
 	private Socket s = null;
-	private ServerModel model;
+	private ServerModel model;	//riceve la stessa istanza del model creata all'inizio in Server.java
 	
 	public ServerThread(Socket socket, ServerModel model) {
 		super("ServerThread");
