@@ -193,7 +193,7 @@ public class ShowOneMailController {
 				root.setRight(editorTrashLoader.load());	
 				ShowTrashController editorTrashController = editorTrashLoader.getController();
 				
-				CasellaPostaModel casellaTrash = new CasellaPostaModel();
+				CasellaPostaModel casellaTrash = new CasellaPostaModel(model.getClient());
 				casellaTrash.currentUserProperty().set(model.currentUserProperty().get());
 				listTrashController.initModel(casellaTrash);
 				editorTrashController.initModel(casellaTrash);

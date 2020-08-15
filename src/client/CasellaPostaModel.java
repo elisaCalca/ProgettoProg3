@@ -15,6 +15,22 @@ import mailutils.MailUtils;
 public class CasellaPostaModel {
 	
 	/*
+	 * Definizione della proprietà Client - Readonly
+	 */
+	private Client c;
+	
+	public Client getClient() {
+		return c;
+	}
+	
+	/*
+	 * Costruttore
+	 */
+	public CasellaPostaModel(Client c) {
+		this.c = c;
+	}
+	
+	/*
 	 * Definizione della property currentUser
 	 */
 	private final StringProperty currentUser = new SimpleStringProperty();

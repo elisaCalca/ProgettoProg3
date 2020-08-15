@@ -1,8 +1,13 @@
 package server;
 
+import java.io.IOException;
+import java.util.Date;
+
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
@@ -25,10 +30,6 @@ public class ServerController {
 		}
 		
 		this.model = model;
-		
-//		model.serverMessageListProperty().addListener((ListChangeListener<? super ServerMessageModel> )(c) -> {
-//			System.out.println("changed");
-//		});
 		
 		serverMessageList.setItems(model.getServerMessageList());
 		
@@ -58,6 +59,13 @@ public class ServerController {
 		});
 		
 		btnQuit.setOnAction((ActionEvent e) -> {
+			model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Server closing in 3 seconds..."));
+
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException exc) {
+				exc.printStackTrace();
+			}
 			Platform.exit();
 	        System.exit(0);
 		});

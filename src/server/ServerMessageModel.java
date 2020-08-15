@@ -78,9 +78,9 @@ public class ServerMessageModel {
 		setMsg("No message");
 	}
 	
-	public ServerMessageModel(MsgType type, Date date, String msg) {
+	public ServerMessageModel(MsgType type, String msg) {
 		setType(type);
-		setDate(date);
+		setDate(new Date());
 		setMsg(msg);
 	}
 	

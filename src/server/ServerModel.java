@@ -1,8 +1,12 @@
 package server;
 
+import java.util.Date;
+import java.util.Hashtable;
+
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import server.ServerMessageModel.MsgType;
 
 public class ServerModel {
 
@@ -28,4 +32,13 @@ public class ServerModel {
 		serverMessageList.add(msgReceived);
 	}
 	
+	/*
+	 * Definizione della struttura che memorizza i client connessi - thread safe
+	 */
+	private Hashtable<String, ServerThread> lstClientAssociated = new Hashtable<String, ServerThread>();
+	
+	public Hashtable<String, ServerThread> getLstClientAssociated() {
+		return lstClientAssociated;
+	}
+
 }

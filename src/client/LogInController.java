@@ -68,7 +68,7 @@ public class LogInController {
 		//Stabilire la connessione con il Server - capire se messo qui va bene
 		Client c = new Client();
 		c.init();	//stabilisce la connessione con il server e inizializza le cose necessarie
-		c.sendToServer("Connessione da parte del client " + name);
+		c.sendToServer("Name " + name);
 		
 		//alla chiusura della finestra con la X termina tutti i thread JavaFX
 		primaryStage.setOnCloseRequest((WindowEvent e) -> {
@@ -86,7 +86,7 @@ public class LogInController {
 		root.setRight(editorLoader.load());	
 		ShowOneMailController editorController = editorLoader.getController();
 		
-		CasellaPostaModel casellaPosta = new CasellaPostaModel();
+		CasellaPostaModel casellaPosta = new CasellaPostaModel(c);
 
 		casellaPosta.currentUserProperty().set(name);
 		listController.initModel(casellaPosta);

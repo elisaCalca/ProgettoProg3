@@ -1,46 +1,67 @@
 package server;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.Random;
+
+import javafx.application.Platform;
+import server.ServerMessageModel.MsgType;
 
 public class ServerThread extends Thread {
 	
 	private Socket s = null;
+	private BufferedReader in;
+	private PrintWriter out;
 	private ServerModel model;	//riceve la stessa istanza del model creata all'inizio in Server.java
 	
-	public ServerThread(Socket socket, ServerModel model) {
+	public ServerThread(Socket socket, ServerModel model) throws IOException {
 		super("ServerThread");
 		s = socket;
+		in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+		OutputStreamWriter osw = new OutputStreamWriter(s.getOutputStream());
+		out = new PrintWriter(new BufferedWriter(osw), true);
 		this.model = model;
 	}
 	
 	public void run() {
 		try {
-			OutputStream o = s.getOutputStream();
-			PrintWriter output = new PrintWriter(o, true);
-			InputStream i = s.getInputStream();
-			Scanner input = new Scanner(i);
-			output.println("Ciao caro client!");	//spedisce un dato
-			String dato = input.next();		//legge un dato
-			System.out.println("Dato: " + dato);	//elabora il dato
-			model.addServerMessage(new ServerMessageModel());
+			
+			//continua ad ascoltare messaggi dal client a cui è connesso
+			while(true) {
+				
+				String msgReceived = in.readLine();
+				
+				Platform.runLater(() -> {
+					model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Message received " + msgReceived));
+				});
+				
+				if(msgReceived.contains("Name ")) {
+					msgReceived.replaceAll("Name ", "");
+					model.getLstClientAssociated().put(msgReceived, this);
+				}
+				System.out.println("lst client"+model.getLstClientAssociated());
+			}
 			
 		} catch (IOException e) {
 			System.err.println("I/O Exception");
-			System.exit(1);
+			System.exit(-1);
 		} finally {
 			try {
 				s.close();
 			} catch(IOException exc) {
 				System.err.println("Something went wrong...");
-				System.exit(0);
+				System.exit(-1);
 			}
 		}
-		
+	}
+	
+	public PrintWriter getPrintWriter() {
+		return out;
 	}
 	
 }

@@ -23,7 +23,6 @@ public class Client {
 	public void init() throws UnknownHostException, IOException {
 		ip = InetAddress.getByName("127.0.0.1"); 	//localhost
 		s = new Socket(ip, port);
-		System.out.println("Sono il client" + Thread.currentThread().getId() + "mi sono connesso al server.");
 		
 		//creazione stream di input da socket
 		InputStreamReader isr = new InputStreamReader(s.getInputStream());
