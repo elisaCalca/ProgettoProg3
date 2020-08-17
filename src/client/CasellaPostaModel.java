@@ -90,36 +90,48 @@ public class CasellaPostaModel {
 	 * Inserisce i messaggi nella messageList
 	 * Ignora il messaggio se l'utente loggato non è tra i destinatari
 	 */
-	public void loadMessageList() throws IOException {
-		//invece che leggerli direttamente dal file dovrà farseli spedire dalla socket
-		List<EmailModel> emails = MailUtils.readEmailsFromJSON("Files/emails.json");
-		List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + getCurrentUser() + "_trash.json");
-		for(EmailModel em : emails) {
-			if(em.getDestinatari().toLowerCase().contains(getCurrentUser().toLowerCase()) && !isTrashed(em, trash)) {
-				messageList.add(em);
+	public void loadMessageList() throws IOException, ClassNotFoundException {
+//		//invece che leggerli direttamente dal file dovrà farseli spedire dalla socket
+//		List<EmailModel> emails = MailUtils.readEmailsFromJSON("Files/emails.json");
+//		List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + getCurrentUser() + "_trash.json");
+//		for(EmailModel em : emails) {
+//			if(em.getDestinatari().toLowerCase().contains(getCurrentUser().toLowerCase()) && !trash.contains(em)) {
+//				messageList.add(em);
+//			}
+//		}
+		
+//		new Thread(() ->  {
+			Object received;
+			try {
+				received = c.receiveFromServer();
+				while(received != null) {
+					messageList.add((EmailModel)received);
+				}
+			} catch (ClassNotFoundException | IOException e) {
+				System.out.println("Error while loading messageList");
+				e.printStackTrace();
 			}
+//		});
+		
+		orderByDateDesc();
+		System.out.println("ho caricato la message list!!!");
+	}
+	
+	public void loadTrashMessageList() throws IOException, ClassNotFoundException {
+		//invece che leggerli direttamente dal file dovrà farseli spedire dalla socket
+//		List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + getCurrentUser() + "_trash.json");
+//		for(EmailModel em : trash) {
+//			messageList.add(em);
+//			
+//		}
+		Object received = c.receiveFromServer();
+		while(received != null) {
+			messageList.add((EmailModel)received); 
 		}
+		System.out.println("received trash message list");
 		orderByDateDesc();
 	}
 	
-	public void loadTrashMessageList() throws IOException {
-		//invece che leggerli direttamente dal file dovrà farseli spedire dalla socket
-		List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + getCurrentUser() + "_trash.json");
-		for(EmailModel em : trash) {
-			messageList.add(em);
-			
-		}
-		orderByDateDesc();
-	}
-	
-	private boolean isTrashed(EmailModel toCheck, List<EmailModel> trash) {
-		for(EmailModel em : trash) {
-			if(em.equals(toCheck)) {
-				return true;
-			}
-		}
-		return false;
-	}
 	
 	private void orderByDateDesc() {
 		EmailModel temp;

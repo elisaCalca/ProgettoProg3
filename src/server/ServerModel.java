@@ -29,6 +29,7 @@ public class ServerModel {
 	}
 	
 	synchronized public void addServerMessage(ServerMessageModel msgReceived) {
+		System.out.println("Message Server added: "+ msgReceived);
 		serverMessageList.add(msgReceived);
 	}
 	

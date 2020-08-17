@@ -44,7 +44,7 @@ public class ShowTrashController {
 		//mandare al server la richiesta di ricevere il cestino
 		try {
 			model.loadTrashMessageList(); 
-		} catch (IOException e2) {
+		} catch (IOException | ClassNotFoundException e2) {
 			e2.printStackTrace();
 			System.out.println("An ERROR occured while loading trash message list of user " + model.getCurrentUser());
 		}

@@ -39,7 +39,8 @@ public class Server {
 				ServerThread st = new ServerThread(socket, server);
 				st.start();
 			}
-		} catch(IOException e) {
+		} catch(IOException | ClassNotFoundException e) {
+			e.printStackTrace();
 			Platform.runLater(() -> {
 				server.addServerMessage(new ServerMessageModel(MsgType.ERROR, "Accept failed"));
 			});

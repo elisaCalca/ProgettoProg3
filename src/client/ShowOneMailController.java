@@ -61,11 +61,11 @@ public class ShowOneMailController {
 		}
 
 		this.model = model;
-
+		System.out.println("initModel show one mail");
 		//la lettura è da far fare al server, questo metodo dovrà ascoltare la socket che riceve dal server
 		try {
 			model.loadMessageList();// aggiunto per far caricare le email del file nella casella di posta 
-		} catch (IOException e2) {
+		} catch (IOException | ClassNotFoundException e2) {
 			e2.printStackTrace();
 			System.out.println("An ERROR occured while loading message list");
 		} 
@@ -142,6 +142,7 @@ public class ShowOneMailController {
 			if (model.getMessageList().size() > 0) {
 				
 				//Scrive la mail nel cestino dell'utente
+				//DEVE ESSERE INVIATA AL SERVER
 				EmailModel toDelete = model.currentEmailProperty().get();
 				try {
 					sendEmailToTrash(toDelete);
@@ -226,12 +227,13 @@ public class ShowOneMailController {
 	 * Aggiunge la nuova email alla lista ottenuta dal trash
 	 * Riscrive il trash contenente la nuova email
 	 */
+	//TUTTO BELLO MA LO DEVE FARE IL SERVER
 	private void sendEmailToTrash(EmailModel trash) throws IOException {
 		String filepath = "Files/Trash/" + model.getCurrentUser() + "_trash.json";
 		List<EmailModel> trashList = MailUtils.readEmailsFromJSON(filepath);
 		trashList.add(trash);
 		MailUtils.writeEmailsInJSON(filepath, trashList);
-		//SE IL TRASH è APERTO DEVE AGGIORNARSI AUTOMATICAMENTE!!!
+		//SE IL TRASH è APERTO DEVE AGGIORNARSI AUTOMATICAMENTE!!! - PROPERTIES
 	}
 	
 	/*

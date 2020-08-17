@@ -1,5 +1,9 @@
 package client;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -11,12 +15,14 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class EmailModel {
+public class EmailModel implements Serializable{
+	
+	private static final long serialVersionUID = 7004764169781453612L;
 	
 	/*
 	 * Definizione della property ID
 	 */
-	private final IntegerProperty id = new SimpleIntegerProperty();
+	private transient final IntegerProperty id = new SimpleIntegerProperty();
 	
 	public final IntegerProperty idProperty() {
 		return this.id;
@@ -33,7 +39,7 @@ public class EmailModel {
 	/*
 	 * Definizione della property DATA
 	 */
-	private final StringProperty date = new SimpleStringProperty();
+	private transient final StringProperty date = new SimpleStringProperty();
 
 	public final StringProperty dateProperty() {
 		return this.date;
@@ -52,7 +58,7 @@ public class EmailModel {
 	/*
 	 * Definizione della property MITTENTE
 	 */
-	private final StringProperty mittente = new SimpleStringProperty();
+	private transient final StringProperty mittente = new SimpleStringProperty();
 	
 	public final StringProperty mittenteProperty() {
 		return this.mittente;
@@ -69,7 +75,7 @@ public class EmailModel {
 	/*
 	 * Definizione della property DESTINATARIO
 	 */
-	private final StringProperty destinatari = new SimpleStringProperty();
+	private transient final StringProperty destinatari = new SimpleStringProperty();
 	
 	public final StringProperty destinatariProperty() {
 		return this.destinatari;
@@ -103,7 +109,7 @@ public class EmailModel {
 	/*
 	 * Definizione della property TESTO
 	 */
-	private final StringProperty testo = new SimpleStringProperty();
+	private transient final StringProperty testo = new SimpleStringProperty();
 	
 	public final StringProperty testoProperty() {
 		return this.testo;
@@ -158,6 +164,29 @@ public class EmailModel {
 				this.getArgomento() + " " +
 				this.getTesto() + " " +
 				this.getDestinatari());
+	}
+	
+	/*
+	 * https://stackoverflow.com/questions/44931603/javafx-io-exception-about-implements-serializable
+	 */
+	private void writeObject(ObjectOutputStream s) throws IOException {
+//	    s.defaultWriteObject();
+	    s.writeLong(idProperty().intValue());
+	    s.writeUTF(dateProperty().getValueSafe()); // can't be null so use getValueSafe that returns empty string if it's null
+	    s.writeUTF(mittenteProperty().getValueSafe());
+	    s.writeUTF(destinatariProperty().getValueSafe());
+	    s.writeUTF(argomentoProperty().getValueSafe());
+	    s.writeUTF(testoProperty().getValueSafe());
+	}
+	
+	private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+//	    s.defaultReadObject();
+		setId(s.readInt());
+	    setDate(((Date)s.readObject()));
+	    setMittente(s.readUTF());
+	    setDestinatari(s.readUTF());
+	    setArgomento(s.readUTF());
+	    setTesto(s.readUTF());
 	}
 	
 }
