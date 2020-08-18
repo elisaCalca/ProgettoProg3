@@ -92,7 +92,7 @@ public class EmailModel implements Serializable{
 	/*
 	 * Definizione della property ARGOMENTO
 	 */
-	private final StringProperty argomento = new SimpleStringProperty();
+	private transient final StringProperty argomento = new SimpleStringProperty();
 	
 	public final StringProperty argomentoProperty() {
 		return this.argomento;
@@ -170,8 +170,8 @@ public class EmailModel implements Serializable{
 	 * https://stackoverflow.com/questions/44931603/javafx-io-exception-about-implements-serializable
 	 */
 	private void writeObject(ObjectOutputStream s) throws IOException {
-//	    s.defaultWriteObject();
-	    s.writeLong(idProperty().intValue());
+	    s.defaultWriteObject();
+		s.writeInt(idProperty().intValue());
 	    s.writeUTF(dateProperty().getValueSafe()); // can't be null so use getValueSafe that returns empty string if it's null
 	    s.writeUTF(mittenteProperty().getValueSafe());
 	    s.writeUTF(destinatariProperty().getValueSafe());
@@ -180,13 +180,22 @@ public class EmailModel implements Serializable{
 	}
 	
 	private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
-//	    s.defaultReadObject();
-		setId(s.readInt());
-	    setDate(((Date)s.readObject()));
-	    setMittente(s.readUTF());
-	    setDestinatari(s.readUTF());
-	    setArgomento(s.readUTF());
-	    setTesto(s.readUTF());
+		s.defaultReadObject();
+		
+		idProperty().set(s.readInt());
+		dateProperty().set(s.readUTF());
+		mittenteProperty().set(s.readUTF());
+		destinatariProperty().set(s.readUTF());
+		argomentoProperty().set(s.readUTF());
+		testoProperty().set(s.readUTF());
+//		setId(s.readInt());
+//		String strDate = s.readUTF();
+//		
+////	    setDate((s.readUTF()));
+//	    setMittente(s.readUTF());
+//	    setDestinatari(s.readUTF());
+//	    setArgomento(s.readUTF());
+//	    setTesto(s.readUTF());
 	}
 	
 }

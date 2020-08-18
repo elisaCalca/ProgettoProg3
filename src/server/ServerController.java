@@ -33,8 +33,8 @@ public class ServerController {
 		
 		serverMessageList.setItems(model.getServerMessageList());
 		
-		serverMessageList.setMouseTransparent(true);
-		serverMessageList.setFocusTraversable(false);
+//		serverMessageList.setMouseTransparent(true);
+//		serverMessageList.setFocusTraversable(false);
 		
 		serverMessageList.setCellFactory(lv -> new ListCell<ServerMessageModel>() {
 			@Override

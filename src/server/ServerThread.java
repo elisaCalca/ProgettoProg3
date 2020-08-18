@@ -13,6 +13,7 @@ import server.ServerMessageModel.MsgType;
 
 public class ServerThread extends Thread {
 	
+	private boolean condition = true;
 	private Socket s = null;
 	private ObjectInputStream in;	//stream object for receiving object
 	private ObjectOutputStream out;	//stream object for sending object
@@ -22,24 +23,22 @@ public class ServerThread extends Thread {
 		super("ServerThread");
 		s = socket;
 		this.model = model;
-//		
-//		in = new ObjectInputStream(s.getInputStream());
+		
 		out = new ObjectOutputStream(s.getOutputStream());
-		System.out.println("fine costruttore server thread");
 	}
 	
 	public void run() {
 		try {
 			
+			in = new ObjectInputStream(s.getInputStream());
 			//continua ad ascoltare messaggi dal client a cui è connesso
-//			while(true) {
-			do {
-				in = new ObjectInputStream(s.getInputStream());
-				System.out.println("While true");
+			while(condition) {
+			
 				Object received = in.readObject();
-				
-				if(received == null)	break; 
-//			while (received != null) {
+				if(received == null) {
+					condition = false; 
+					System.out.println("condition = false in serverThread");
+				}
 				
 				if(received instanceof EmailModel) {
 					EmailModel receivedEmail = (EmailModel)received;
@@ -63,7 +62,10 @@ public class ServerThread extends Thread {
 						List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + name + "_trash.json");
 						for(EmailModel em : emails) {
 							if(em.getDestinatari().toLowerCase().contains(name.toLowerCase()) && !trash.contains(em)) {
-								out.writeObject(em);
+								out.writeObject(em.toString());
+//								out.flush();
+//								out.reset();
+								System.out.println("write email " + em);
 								Platform.runLater(() -> {
 									model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Email send to " + name));
 								});
@@ -89,23 +91,20 @@ public class ServerThread extends Thread {
 				}
 				
 //				received = in.readObject();
-			}while (in != null);
+			}
 			//quando esce dal while non sta più ascoltando
 //			s.close();
 			
 		} catch (IOException e) {
 			System.err.println("I/O Exception");
-			e.printStackTrace();
-//			System.exit(-1);
+//			e.printStackTrace();
 		} catch (ClassNotFoundException e1) {
-			System.err.println("ClassNotFoundException during cast");
-//			System.exit(-1);
+			System.err.println("ClassNotFoundException in ServerThread");
 		} finally {
 			try {
 				s.close();
 			} catch(IOException e2) {
 				System.err.println("Something went wrong...");
-//				System.exit(-1);
 			}
 		}
 	}
@@ -123,6 +122,8 @@ public class ServerThread extends Thread {
 		for(String cl : clients) {
 			clientOut = model.getLstClientAssociated().get(cl.trim()).getOutputStream();
 			clientOut.writeObject(email);
+			clientOut.flush();
+			clientOut.reset();
 			model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Sending message to: " + cl + " with text: " + email.getTesto()));
 			
 		}

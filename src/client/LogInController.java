@@ -46,7 +46,6 @@ public class LogInController {
 				errorMsg1.setVisible(false);
 				errorMsg2.setVisible(false);
 				try {
-					System.out.println("press button login");
 					generateClient(new Stage(), indirizzo.getText());
 					
 				} catch (UnknownHostException e1) {
@@ -68,9 +67,7 @@ public class LogInController {
 		//Stabilire la connessione con il Server - capire se messo qui va bene
 		Client c = new Client();
 		c.init();	//stabilisce la connessione con il server e inizializza le cose necessarie
-		System.out.println("fine client init");
-		c.sendToServer("Name " + name);
-		System.out.println("Send my name to server");
+//		c.sendToServer("Name " + name);
 		
 		//alla chiusura della finestra con la X termina tutti i thread JavaFX
 		primaryStage.setOnCloseRequest((WindowEvent e) -> {

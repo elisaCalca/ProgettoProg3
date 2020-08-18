@@ -26,7 +26,6 @@ public class MailListController {
 		}
 		
 		this.model = model;
-		System.out.println("init model mail list");
 		messageList.setItems(model.getMessageList());
 		messageList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			model.setCurrentEmail(newSelection);

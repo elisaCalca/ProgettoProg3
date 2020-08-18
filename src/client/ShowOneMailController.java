@@ -59,9 +59,9 @@ public class ShowOneMailController {
 		if (this.model != null) {
 			throw new IllegalStateException("Model can only be initialized once!");
 		}
-
+		
+		System.out.println("init model show one mail");
 		this.model = model;
-		System.out.println("initModel show one mail");
 		//la lettura è da far fare al server, questo metodo dovrà ascoltare la socket che riceve dal server
 		try {
 			model.loadMessageList();// aggiunto per far caricare le email del file nella casella di posta 
