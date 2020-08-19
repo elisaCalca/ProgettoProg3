@@ -106,23 +106,13 @@ public class CasellaPostaModel {
 		System.out.println("Inizio loadMessageList");
 			try {
 				c.sendToServer("Name " + currentUser.get());
-//				ObjectInputStream inC = c.getInputStream();
-//				while(true) {
-//					c.init();
-//					Object received = c.receiveFromServer();
-//					ObjectInputStream inC = new ObjectInputStream(s.getInputStream());
-					
-					Object received = c.getInputStream().readObject();
-					System.out.println("LOADMESSAGELIST " + (ArrayList<EmailModel>)received);
-//					messageList.add((EmailModel)received);
-					System.out.println("an email was received from the server");
-//					c.closeChannel(getCurrentUser());
-//				}
+				ArrayList<EmailModel> receivedMessageList = (ArrayList<EmailModel>)c.receiveFromServer();
+				messageList.addAll(receivedMessageList);
+				System.out.println("an email was received from the server");
+				
 			} catch (ClassNotFoundException | IOException e) {
 				System.out.println("Error while loading messageList");
 				e.printStackTrace();
-			} catch(NullPointerException azz) {
-				System.err.println("null pointer exc in load message list");
 			}
 //		});
 		
@@ -137,8 +127,9 @@ public class CasellaPostaModel {
 //			messageList.add(em);
 //			
 //		}
-		Object received = c.receiveFromServer();
+		Object received = new Object();
 		while(received != null) {
+			received = c.receiveFromServer();
 			messageList.add((EmailModel)received); 
 		}
 		System.out.println("received trash message list");

@@ -21,9 +21,9 @@ public class MailUtils {
 	/*
 	 * Legge le Email presenti in un file .json e le restituisce in una lista
 	 */
-	public static List<EmailModel> readEmailsFromJSON(String filepath) throws IOException {
+	public static ArrayList<EmailModel> readEmailsFromJSON(String filepath) throws IOException {
 		
-		List<EmailModel> emails = new ArrayList<EmailModel>();
+		ArrayList<EmailModel> emails = new ArrayList<EmailModel>();
 		
 		JSONParser parser = new JSONParser();
 		FileReader fReader = new FileReader(filepath);
@@ -145,6 +145,18 @@ public class MailUtils {
 		}
 		return false;
 	}
+	
+	/*
+	 * Restituisce true se l'email da controllare è contenuta nella lista ricevuta come parametro
+	 */
+	public static boolean isTrashed(EmailModel toCheck, List<EmailModel> trash) {
+ 		for(EmailModel em : trash) {
+ 			if(em.equals(toCheck)) {
+ 				return true;
+ 			}
+ 		}
+ 		return false;
+ 	}
 	
 }
 

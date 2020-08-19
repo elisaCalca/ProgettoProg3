@@ -28,17 +28,8 @@ public class Client {
 		ip = InetAddress.getByName("127.0.0.1"); 	//localhost
 		s = new Socket(ip, port);
 		
-//		//creazione stream di input da socket
-//		InputStreamReader isr = new InputStreamReader(s.getInputStream());
-//		in = new BufferedReader(isr);
-//		
-//		// creazione stream di output su socket
-//		OutputStreamWriter osw = new OutputStreamWriter(s.getOutputStream());
-//		BufferedWriter bw = new BufferedWriter(osw);
-//		out = new PrintWriter(bw, true);
-
-//		outC = new ObjectOutputStream(s.getOutputStream());
-//		inC = new ObjectInputStream(s.getInputStream());
+		outC = new ObjectOutputStream(s.getOutputStream());
+		inC = new ObjectInputStream(s.getInputStream());
 		
 	}
 //	
@@ -49,22 +40,21 @@ public class Client {
 	}
 	
 	public ObjectInputStream getInputStream() throws IOException {
-		return inC = new ObjectInputStream(s.getInputStream());
+		return inC;
 	}
 	
 	public void sendToServer(Object dataToSend) throws IOException {
-		outC = new ObjectOutputStream(s.getOutputStream());
+//		outC = new ObjectOutputStream(s.getOutputStream());
 		if(dataToSend != null) {
 			outC.writeObject(dataToSend);
-			outC.flush();
+//			outC.flush();
 //			outC.reset();
 		}
 	}
 	
 	public Object receiveFromServer() throws IOException, ClassNotFoundException {
-		inC = new ObjectInputStream(s.getInputStream());
-		Object ret = inC.readObject();
-		return ret;
+//		inC = new ObjectInputStream(s.getInputStream());
+		return inC.readObject();
 	}
 	
 	public void closeChannel(String name) throws IOException {
