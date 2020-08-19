@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 import client.EmailModel;
@@ -60,17 +61,21 @@ public class ServerThread extends Thread {
 						//il server legge il suo file con le email e gliele invia
 						List<EmailModel> emails = MailUtils.readEmailsFromJSON("Files/emails.json");
 						List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + name + "_trash.json");
+//						ArrayList<EmailModel> toSend = new ArrayList<EmailModel>();
 						for(EmailModel em : emails) {
 							if(em.getDestinatari().toLowerCase().contains(name.toLowerCase()) && !trash.contains(em)) {
 								out.writeObject(em.toString());
 //								out.flush();
 //								out.reset();
+//								toSend.add(em);
 								System.out.println("write email " + em);
 								Platform.runLater(() -> {
 									model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Email send to " + name));
 								});
 							}
 						}
+						System.out.println("ora le invio al client");
+//						out.writeObject(toSend);
 						
 					} else if(receivedStr.contains("Trash ")) {
 						String name = receivedStr.replaceAll("Trash ", "");

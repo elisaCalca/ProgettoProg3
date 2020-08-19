@@ -2,6 +2,7 @@ package client;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.beans.Observable;
@@ -106,20 +107,20 @@ public class CasellaPostaModel {
 			try {
 				c.sendToServer("Name " + currentUser.get());
 //				ObjectInputStream inC = c.getInputStream();
-				while(true) {
-					c.init();
+//				while(true) {
+//					c.init();
 //					Object received = c.receiveFromServer();
 //					ObjectInputStream inC = new ObjectInputStream(s.getInputStream());
 					
 					Object received = c.getInputStream().readObject();
-					System.out.println("LOADMESSAGELIST " + (String)received);
+					System.out.println("LOADMESSAGELIST " + (ArrayList<EmailModel>)received);
 //					messageList.add((EmailModel)received);
 					System.out.println("an email was received from the server");
-					c.closeChannel(getCurrentUser());
-				}
+//					c.closeChannel(getCurrentUser());
+//				}
 			} catch (ClassNotFoundException | IOException e) {
 				System.out.println("Error while loading messageList");
-//				e.printStackTrace();
+				e.printStackTrace();
 			} catch(NullPointerException azz) {
 				System.err.println("null pointer exc in load message list");
 			}

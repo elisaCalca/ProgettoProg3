@@ -22,7 +22,7 @@ public class EmailModel implements Serializable{
 	/*
 	 * Definizione della property ID
 	 */
-	private transient final IntegerProperty id = new SimpleIntegerProperty();
+	private transient IntegerProperty id = new SimpleIntegerProperty();
 	
 	public final IntegerProperty idProperty() {
 		return this.id;
@@ -39,7 +39,7 @@ public class EmailModel implements Serializable{
 	/*
 	 * Definizione della property DATA
 	 */
-	private transient final StringProperty date = new SimpleStringProperty();
+	private transient StringProperty date = new SimpleStringProperty();
 
 	public final StringProperty dateProperty() {
 		return this.date;
@@ -58,7 +58,7 @@ public class EmailModel implements Serializable{
 	/*
 	 * Definizione della property MITTENTE
 	 */
-	private transient final StringProperty mittente = new SimpleStringProperty();
+	private transient StringProperty mittente = new SimpleStringProperty();
 	
 	public final StringProperty mittenteProperty() {
 		return this.mittente;
@@ -75,7 +75,7 @@ public class EmailModel implements Serializable{
 	/*
 	 * Definizione della property DESTINATARIO
 	 */
-	private transient final StringProperty destinatari = new SimpleStringProperty();
+	private transient StringProperty destinatari = new SimpleStringProperty();
 	
 	public final StringProperty destinatariProperty() {
 		return this.destinatari;
@@ -92,7 +92,7 @@ public class EmailModel implements Serializable{
 	/*
 	 * Definizione della property ARGOMENTO
 	 */
-	private transient final StringProperty argomento = new SimpleStringProperty();
+	private transient StringProperty argomento = new SimpleStringProperty();
 	
 	public final StringProperty argomentoProperty() {
 		return this.argomento;
@@ -109,7 +109,7 @@ public class EmailModel implements Serializable{
 	/*
 	 * Definizione della property TESTO
 	 */
-	private transient final StringProperty testo = new SimpleStringProperty();
+	private transient StringProperty testo = new SimpleStringProperty();
 	
 	public final StringProperty testoProperty() {
 		return this.testo;
@@ -167,12 +167,12 @@ public class EmailModel implements Serializable{
 	}
 	
 	/*
-	 * https://stackoverflow.com/questions/44931603/javafx-io-exception-about-implements-serializable
+	 * Ridefinizione dei metodi necessari per la serializzazione dell'oggetto
 	 */
 	private void writeObject(ObjectOutputStream s) throws IOException {
 	    s.defaultWriteObject();
 		s.writeInt(idProperty().intValue());
-	    s.writeUTF(dateProperty().getValueSafe()); // can't be null so use getValueSafe that returns empty string if it's null
+	    s.writeUTF(dateProperty().getValueSafe()); //getValueSafe ritorna una stringa vuota se è null
 	    s.writeUTF(mittenteProperty().getValueSafe());
 	    s.writeUTF(destinatariProperty().getValueSafe());
 	    s.writeUTF(argomentoProperty().getValueSafe());
@@ -181,23 +181,16 @@ public class EmailModel implements Serializable{
 	
 	private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
 		s.defaultReadObject();
-		
-		idProperty().set(s.readInt());
-		dateProperty().set(s.readUTF());
-		mittenteProperty().set(s.readUTF());
-		destinatariProperty().set(s.readUTF());
-		argomentoProperty().set(s.readUTF());
-		testoProperty().set(s.readUTF());
-//		setId(s.readInt());
-//		String strDate = s.readUTF();
-//		
-////	    setDate((s.readUTF()));
-//	    setMittente(s.readUTF());
-//	    setDestinatari(s.readUTF());
-//	    setArgomento(s.readUTF());
-//	    setTesto(s.readUTF());
+		id = new SimpleIntegerProperty(s.readInt());
+		date = new SimpleStringProperty(s.readUTF());
+		mittente = new SimpleStringProperty(s.readUTF());
+		destinatari = new SimpleStringProperty(s.readUTF());
+		argomento = new SimpleStringProperty(s.readUTF());
+		testo = new SimpleStringProperty(s.readUTF());
 	}
-	
+	/*
+	 * https://stackoverflow.com/questions/44931603/javafx-io-exception-about-implements-serializable
+	 */
 }
 
 
