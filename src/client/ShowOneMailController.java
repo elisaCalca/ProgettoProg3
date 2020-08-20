@@ -60,7 +60,6 @@ public class ShowOneMailController {
 			throw new IllegalStateException("Model can only be initialized once!");
 		}
 		
-		System.out.println("init model show one mail");
 		this.model = model;
 		//la lettura è da far fare al server, questo metodo dovrà ascoltare la socket che riceve dal server
 		try {
@@ -203,9 +202,6 @@ public class ShowOneMailController {
 				stage.setScene(scene);
 				stage.show();
 				
-				
-				
-				
 			} catch (IOException exc) {
 				exc.printStackTrace();
 			}
@@ -216,6 +212,11 @@ public class ShowOneMailController {
 		
 		//alla chiusura tramite bottone LogOut termina tutti i thread JavaFX (stessa JVM)
 		buttonLogOut.setOnAction((ActionEvent e) -> {
+			try {
+				model.getClient().closeChannel(model.getCurrentUser());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			Platform.exit();
 	        System.exit(0);
 		});

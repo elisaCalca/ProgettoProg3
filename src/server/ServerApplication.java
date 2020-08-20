@@ -29,7 +29,7 @@ public class ServerApplication extends Application{
 				Server s = new Server();
 				s.activate(server);
 			} catch (IOException e) {
-				System.err.println("Exception in ServerApplication");
+				System.err.println("IOException in ServerApplication");
 				e.printStackTrace();
 			}
 		}).start();

@@ -1,5 +1,6 @@
 package client;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -93,49 +94,37 @@ public class CasellaPostaModel {
 	 * Ignora il messaggio se l'utente loggato non è tra i destinatari
 	 */
 	public void loadMessageList() throws IOException, ClassNotFoundException {
-//		//invece che leggerli direttamente dal file dovrà farseli spedire dalla socket
-//		List<EmailModel> emails = MailUtils.readEmailsFromJSON("Files/emails.json");
-//		List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + getCurrentUser() + "_trash.json");
-//		for(EmailModel em : emails) {
-//			if(em.getDestinatari().toLowerCase().contains(getCurrentUser().toLowerCase()) && !trash.contains(em)) {
-//				messageList.add(em);
-//			}
-//		}
-		
-//		new Thread(() ->  {
-		System.out.println("Inizio loadMessageList");
-			try {
-				c.sendToServer("Name " + currentUser.get());
-				ArrayList<EmailModel> receivedMessageList = (ArrayList<EmailModel>)c.receiveFromServer();
-				messageList.addAll(receivedMessageList);
-				System.out.println("an email was received from the server");
-				
-			} catch (ClassNotFoundException | IOException e) {
-				System.out.println("Error while loading messageList");
+		try {
+			c.sendToServer("Name " + currentUser.get());
+			ArrayList<EmailModel> receivedMessageList = (ArrayList<EmailModel>)c.receiveFromServer();
+			messageList.addAll(receivedMessageList);
+			orderByDateDesc();
+		} catch (ClassNotFoundException | IOException e) {
+			if(e instanceof EOFException) {
+				System.err.println("No emails found for Mailbox");
+				e.printStackTrace();
+			} else {
+				System.err.println("Error while loading messageList");
 				e.printStackTrace();
 			}
-//		});
-		
-		orderByDateDesc();
-		System.out.println("ho caricato la message list!!!");
+		}
 	}
 	
 	public void loadTrashMessageList() throws IOException, ClassNotFoundException {
-		//invece che leggerli direttamente dal file dovrà farseli spedire dalla socket
-//		List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + getCurrentUser() + "_trash.json");
-//		for(EmailModel em : trash) {
-//			messageList.add(em);
-//			
-//		}
-		Object received = new Object();
-		while(received != null) {
-			received = c.receiveFromServer();
-			messageList.add((EmailModel)received); 
+		try {
+			c.sendToServer("Trash " + currentUser.get());
+			ArrayList<EmailModel> receivedTrash = (ArrayList<EmailModel>)c.receiveFromServer();
+			messageList.addAll(receivedTrash);
+			orderByDateDesc();
+		} catch(ClassNotFoundException | IOException e) {
+			if(e instanceof EOFException) {
+				System.err.println("No emails found for Trash");
+			} else {
+				System.err.println("Error while loading trash list");
+				e.printStackTrace();
+			}
 		}
-		System.out.println("received trash message list");
-		orderByDateDesc();
 	}
-	
 	
 	private void orderByDateDesc() {
 		EmailModel temp;

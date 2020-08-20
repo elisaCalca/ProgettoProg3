@@ -19,21 +19,17 @@ public class Client {
 	private Socket s = null;
 	private InetAddress ip;
 	private int port = 1234;
-//	private BufferedReader in = null;
-//	private PrintWriter out = null;
 	private ObjectInputStream inC;
 	private ObjectOutputStream outC;
 	
 	public void init() throws UnknownHostException, IOException {
-		ip = InetAddress.getByName("127.0.0.1"); 	//localhost
+		ip = InetAddress.getByName("127.0.0.1");
 		s = new Socket(ip, port);
 		
 		outC = new ObjectOutputStream(s.getOutputStream());
 		inC = new ObjectInputStream(s.getInputStream());
 		
 	}
-//	
-	
 	
 	public ObjectOutputStream getOutputStream() {
 		return outC;
@@ -44,16 +40,12 @@ public class Client {
 	}
 	
 	public void sendToServer(Object dataToSend) throws IOException {
-//		outC = new ObjectOutputStream(s.getOutputStream());
 		if(dataToSend != null) {
 			outC.writeObject(dataToSend);
-//			outC.flush();
-//			outC.reset();
 		}
 	}
 	
 	public Object receiveFromServer() throws IOException, ClassNotFoundException {
-//		inC = new ObjectInputStream(s.getInputStream());
 		return inC.readObject();
 	}
 	

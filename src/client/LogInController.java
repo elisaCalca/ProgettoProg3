@@ -1,5 +1,6 @@
 package client;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -46,10 +47,11 @@ public class LogInController {
 				errorMsg1.setVisible(false);
 				errorMsg2.setVisible(false);
 				try {
+					
 					generateClient(new Stage(), indirizzo.getText());
 					
 				} catch (UnknownHostException e1) {
-					//mostrare un popup che dice all'utente che il server è caduto
+					e1.printStackTrace();
 				} catch (Exception exc) {
 					exc.printStackTrace();
 				} finally {
@@ -64,13 +66,16 @@ public class LogInController {
 	
 	private void generateClient(Stage primaryStage, String name) throws Exception {
 
-		//Stabilire la connessione con il Server - capire se messo qui va bene
 		Client c = new Client();
-		c.init();	//stabilisce la connessione con il server e inizializza le cose necessarie
-//		c.sendToServer("Name " + name);
+		c.init();
 		
 		//alla chiusura della finestra con la X termina tutti i thread JavaFX
 		primaryStage.setOnCloseRequest((WindowEvent e) -> {
+			try {
+				c.closeChannel(name);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			Platform.exit();
 	        System.exit(0);
 		});

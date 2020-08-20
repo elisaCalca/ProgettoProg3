@@ -59,13 +59,6 @@ public class ServerController {
 		});
 		
 		btnQuit.setOnAction((ActionEvent e) -> {
-			model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Server closing in 3 seconds..."));
-
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException exc) {
-				exc.printStackTrace();
-			}
 			Platform.exit();
 	        System.exit(0);
 		});

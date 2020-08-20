@@ -135,9 +135,19 @@ public class EmailModel implements Serializable{
 		setTesto(testo);
 	}
 	
+	public EmailModel(String destinatario) {
+		int rand = new Random().nextInt();
+		setId((rand > 0 ? rand : rand * -1));	//nasce con Id positivo perchè è nella Mailbox
+		setDate(new Date());
+		setMittente("noreply.mymail@mymail.com");
+		setDestinatari(destinatario);
+		setArgomento("WELCOME TO MY MAIL");
+		setTesto("Dear user " + destinatario +" enjoy the mailer service. Regards, MyMail Team");
+	}
+	
 	public EmailModel() {
 		int rand = new Random().nextInt();
-		setId((rand > 0 ? rand : rand * -1));
+		setId((rand > 0 ? rand : rand * -1));	//nasce con Id positivo perchè è nella Mailbox
 	}
 	
 	/*

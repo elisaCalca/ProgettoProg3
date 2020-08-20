@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import client.EmailModel;
@@ -16,8 +17,8 @@ public class ServerThread extends Thread {
 	
 	private boolean condition = true;
 	private Socket s = null;
-	private ObjectInputStream in;	//stream object for receiving object
-	private ObjectOutputStream out;	//stream object for sending object
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
 	private ServerModel model;	//riceve la stessa istanza del model creata all'inizio in Server.java
 	private String clientName = "";
 	
@@ -34,13 +35,9 @@ public class ServerThread extends Thread {
 			
 			in = new ObjectInputStream(s.getInputStream());
 			//continua ad ascoltare messaggi dal client a cui è connesso
-			while(condition) {
+			while(true) {
 			
-				Object received = in.readObject();	//IOException quando il client cade
-				if(received == null) {
-					condition = false; 
-					System.out.println("condition = false in serverThread");
-				}
+				Object received = in.readObject();
 				
 				if(received instanceof EmailModel) {
 					//ricevuto email, CASI :va nel cestino, esce dal cestino, deve andare ai destinatari
@@ -70,7 +67,7 @@ public class ServerThread extends Thread {
 						clientName = name;
 						model.getLstClientAssociated().put(name, this);
 						Platform.runLater(() -> {
-							model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Messages request received from " + name));
+							model.addServerMessage(new ServerMessageModel(MsgType.INFO, name + " ask for the messages list in Mailbox"));
 						});
 						//il server legge il file con le email e gliele invia
 						List<EmailModel> emails = MailUtils.readEmailsFromJSON("Files/emails.json");
@@ -81,15 +78,30 @@ public class ServerThread extends Thread {
 								emailsToSend.add(em);
 							}
 						}
-						out.writeObject(emailsToSend);
-						Platform.runLater(() -> {
-							model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Email list sent to " + name));
-						});
+						if(emailsToSend.size() > 0) {
+							out.writeObject(emailsToSend);
+							Platform.runLater(() -> {
+								model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Messages list sent to " + name));
+							});
+						} else if (emailsToSend.size() == 0 && trash.size() > 0){
+							Platform.runLater(() -> {
+								model.addServerMessage(new ServerMessageModel(MsgType.WARN, "There are no message for " + name + " in the Mailbox"));
+							});
+						} else if(emailsToSend.size() == 0 && trash.size() == 0) {
+							out.writeObject(new EmailModel(name));	//costruttore dell'email welcome
+							Platform.runLater(() -> {
+								model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Welcome message sent to " + name));
+							});
+						} else {
+							Platform.runLater(() -> {
+								model.addServerMessage(new ServerMessageModel(MsgType.ERROR, "Error while loading " + name + "'s files"));
+							});
+						}
 						
 					} else if(receivedStr.contains("Trash ")) {
 						String name = receivedStr.replaceAll("Trash ", "");
 						Platform.runLater(() -> {
-							model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Trash request received from " + name));
+							model.addServerMessage(new ServerMessageModel(MsgType.INFO, name + " ask for the messages list in the Trash"));
 						});
 						//il server legge il suo file trash e gli invia le email cestinate
 						List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + name + "_trash.json");
@@ -102,12 +114,13 @@ public class ServerThread extends Thread {
 					
 				}
 				
-//				received = in.readObject();
 			}
 			
 		} catch (IOException e) {
-			System.err.println("I/O Exception");
-			e.printStackTrace();
+			System.err.println("I/O Exception...il client " + clientName + " è caduto");
+			Platform.runLater(() -> {
+				model.addServerMessage(new ServerMessageModel(MsgType.WARN, "Client " + clientName + " disconnected..."));
+			});
 		} catch (ClassNotFoundException e1) {
 			System.err.println("ClassNotFoundException in ServerThread");
 		} finally {
@@ -124,18 +137,19 @@ public class ServerThread extends Thread {
 	}
 	
 	/*
-	 * Metodo che si occupa dello smistamento delle email verso i client destinatari 
+	 * Metodo che si occupa dello smistamento delle email verso i client destinatari se esistono
 	 */
 	private void sortingCenter(EmailModel email) throws IOException {
 		String[] clients = email.getDestinatari().split(";");
 		ObjectOutputStream clientOut;
 		for(String cl : clients) {
-			clientOut = model.getLstClientAssociated().get(cl.trim()).getOutputStream();
-			clientOut.writeObject(email);
-			clientOut.flush();
-			clientOut.reset();
-			model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Sending message to: " + cl + " with text: " + email.getTesto()));
-			
+			if(!model.getLstClientAssociated().containsKey(cl)) {
+				model.addServerMessage(new ServerMessageModel(MsgType.ERROR, cl + " client does not exist!"));
+			} else {
+				clientOut = model.getLstClientAssociated().get(cl.trim()).getOutputStream();
+				clientOut.writeObject(email);
+				model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Sending message to: " + cl + " with text: " + email.getTesto()));
+			}
 		}
 	}
 	
