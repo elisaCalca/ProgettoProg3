@@ -142,7 +142,7 @@ public class EmailModel implements Serializable{
 		setMittente("noreply.mymail@mymail.com");
 		setDestinatari(destinatario);
 		setArgomento("WELCOME TO MY MAIL");
-		setTesto("Dear user " + destinatario +" enjoy the mailer service. Regards, MyMail Team");
+		setTesto("Dear " + destinatario +" enjoy the mailer service. Regards, MyMail's Team");
 	}
 	
 	public EmailModel() {

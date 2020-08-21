@@ -42,7 +42,7 @@ public class ServerApplication extends Application{
 		ServerController serverController = serverLoader.getController();
 		serverController.initModel(server);
 		
-		Scene scene = new Scene(root, 600, 500);
+		Scene scene = new Scene(root, 600, 450);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		

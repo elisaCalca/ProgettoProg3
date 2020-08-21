@@ -55,7 +55,8 @@ public class MailUtils {
 				emails.add(new EmailModel(id, date, mittente, strDest.toString(), argomento, testo));
 			}
 			
-		} catch(FileNotFoundException e) {
+		} catch(IOException e) {
+			System.err.println("Gestione file not found");	//filenotfound è sottoclasse di IO
 			if(filepath.contains("trash")) {
 				File f = new File(filepath);
 				f.getParentFile().mkdirs();
@@ -67,6 +68,7 @@ public class MailUtils {
 					
 				} catch(IOException exc) {
 					exc.printStackTrace();
+					System.err.println("Error while creating trash file");
 				}
 			}
 		} catch (Exception e) {

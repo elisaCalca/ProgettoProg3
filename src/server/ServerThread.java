@@ -1,5 +1,6 @@
 package server;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -71,7 +72,13 @@ public class ServerThread extends Thread {
 						});
 						//il server legge il file con le email e gliele invia
 						List<EmailModel> emails = MailUtils.readEmailsFromJSON("Files/emails.json");
-						List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + name + "_trash.json");
+						String trashPath = "Files/Trash/" + name + "_trash.json";
+						List<EmailModel> trash = new ArrayList<EmailModel>();
+						try {
+							trash.addAll(MailUtils.readEmailsFromJSON(trashPath));
+						} catch (IOException exc) {
+							trashNotFound(trashPath, emails);
+						}
 						ArrayList<EmailModel> emailsToSend = new ArrayList<EmailModel>();
 						for(EmailModel em : emails) {
 							if(em.getDestinatari().toLowerCase().contains(name.toLowerCase()) && !MailUtils.isTrashed(em, trash)) {
@@ -83,15 +90,18 @@ public class ServerThread extends Thread {
 							Platform.runLater(() -> {
 								model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Messages list sent to " + name));
 							});
+							emailsToSend = new ArrayList<EmailModel>();
 						} else if (emailsToSend.size() == 0 && trash.size() > 0){
 							Platform.runLater(() -> {
 								model.addServerMessage(new ServerMessageModel(MsgType.WARN, "There are no message for " + name + " in the Mailbox"));
 							});
 						} else if(emailsToSend.size() == 0 && trash.size() == 0) {
-							out.writeObject(new EmailModel(name));	//costruttore dell'email welcome
+							emailsToSend.add(new EmailModel(name));
+							out.writeObject(emailsToSend);	//costruttore dell'email welcome
 							Platform.runLater(() -> {
 								model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Welcome message sent to " + name));
 							});
+							emailsToSend = new ArrayList<EmailModel>();
 						} else {
 							Platform.runLater(() -> {
 								model.addServerMessage(new ServerMessageModel(MsgType.ERROR, "Error while loading " + name + "'s files"));
@@ -109,7 +119,7 @@ public class ServerThread extends Thread {
 						Platform.runLater(() -> {
 							model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Trashed emails sent to " + name));
 						});
-						
+						trash = new ArrayList<EmailModel>();
 					}
 					
 				}
@@ -117,18 +127,10 @@ public class ServerThread extends Thread {
 			}
 			
 		} catch (IOException e) {
-			System.err.println("I/O Exception...il client " + clientName + " è caduto");
-			Platform.runLater(() -> {
-				model.addServerMessage(new ServerMessageModel(MsgType.WARN, "Client " + clientName + " disconnected..."));
-			});
+			System.err.println("I/O Exception gestita");
+			
 		} catch (ClassNotFoundException e1) {
 			System.err.println("ClassNotFoundException in ServerThread");
-		} finally {
-			try {
-				s.close();
-			} catch(IOException e2) {
-				System.err.println("Something went wrong...");
-			}
 		}
 	}
 	
@@ -149,6 +151,24 @@ public class ServerThread extends Thread {
 				clientOut = model.getLstClientAssociated().get(cl.trim()).getOutputStream();
 				clientOut.writeObject(email);
 				model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Sending message to: " + cl + " with text: " + email.getTesto()));
+			}
+		}
+	}
+	
+	private void trashNotFound(String filepath, List<EmailModel> emails) {
+		System.err.println("Gestione file not found");	//filenotfound è sottoclasse di IO
+		if(filepath.contains("trash")) {
+			File f = new File(filepath);
+			f.getParentFile().mkdirs();
+			try {
+				f.createNewFile();
+				
+				//write an empty array in the new trash file
+				MailUtils.writeEmailsInJSON(filepath, emails);
+				
+			} catch(IOException exc) {
+				exc.printStackTrace();
+				System.err.println("Error while creating trash file");
 			}
 		}
 	}
