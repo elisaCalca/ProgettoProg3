@@ -90,8 +90,8 @@ public class CasellaPostaModel {
 	}
 	
 	/*
-	 * Inserisce i messaggi nella messageList
-	 * Ignora il messaggio se l'utente loggato non è tra i destinatari
+	 * Dice al server come si chiama
+	 * Riceve i messaggi dal server e li carica nella Mailbox
 	 */
 	public void loadMessageList() throws IOException, ClassNotFoundException {
 		try {
@@ -101,7 +101,7 @@ public class CasellaPostaModel {
 			orderByDateDesc();
 		} catch (ClassNotFoundException | IOException e) {
 			if(e instanceof EOFException) {
-				System.err.println("No emails found for Mailbox");
+				System.err.println("No emails received for Mailbox");
 				e.printStackTrace();
 			} else {
 				System.err.println("Error while loading messageList");
@@ -118,7 +118,7 @@ public class CasellaPostaModel {
 			orderByDateDesc();
 		} catch(ClassNotFoundException | IOException e) {
 			if(e instanceof EOFException) {
-				System.err.println("No emails found for Trash");
+				System.err.println("No emails received for Trash");
 			} else {
 				System.err.println("Error while loading trash list");
 				e.printStackTrace();

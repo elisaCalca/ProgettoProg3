@@ -46,15 +46,24 @@ public class ServerThread extends Thread {
 					
 					//se io non sono tra i destinatari della mail, la mail la sto inviando io
 					if(!receivedEmail.getDestinatari().contains(clientName)) {
+						System.out.println("Un client sta cercando di inviare una email a dei destinatari");
 						sortingCenter(receivedEmail);
 						Platform.runLater(() -> {
 							model.addServerMessage(new ServerMessageModel(MsgType.INFO, clientName + "sent the following email " + receivedEmail.toString()));
 						});
 					} else if(receivedEmail.getId() < 0) {
+						System.out.println("Un client sta cancellando una email");
 						//se l'id è negativo deve andare nel cestino
 						//sincronizzare i blocchi sul file che stanno leggendo
+						String filepath = "Files/Trash/" + clientName + "_trash.json";
+						List<EmailModel> trashList = MailUtils.readEmailsFromJSON(filepath);
+						trashList.add(receivedEmail);
+						MailUtils.writeEmailsInJSON(filepath, trashList);
+						//gliela invio di nuovo così la inserisce nel cestino
+						//TODO
 						
 					} else {
+						System.out.println("Un client sta togliendo una email dal cestino");
 						//altrimenti sta uscendo dal cestino
 						
 					}
@@ -63,6 +72,7 @@ public class ServerThread extends Thread {
 				} else if(received instanceof String) {
 					//il client si è appena connesso e invia il proprio nome al server
 					String receivedStr = (String)received;
+					
 					if(receivedStr.contains("Name ")) {
 						String name = receivedStr.replaceAll("Name ", "");
 						clientName = name;
@@ -92,12 +102,14 @@ public class ServerThread extends Thread {
 							});
 							emailsToSend = new ArrayList<EmailModel>();
 						} else if (emailsToSend.size() == 0 && trash.size() > 0){
+							//il fatto che l'utente non abbia mail ne in inbox ne nel cestino viene considerata una cancellazione del profilo
+							//quindi al login successivo riceverà la mail di benvenuto senza passare da qui
 							Platform.runLater(() -> {
 								model.addServerMessage(new ServerMessageModel(MsgType.WARN, "There are no message for " + name + " in the Mailbox"));
 							});
 						} else if(emailsToSend.size() == 0 && trash.size() == 0) {
-							emailsToSend.add(new EmailModel(name));
-							out.writeObject(emailsToSend);	//costruttore dell'email welcome
+							emailsToSend.add(new EmailModel(name));	//costruttore dell'email welcome
+							out.writeObject(emailsToSend);
 							Platform.runLater(() -> {
 								model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Welcome message sent to " + name));
 							});
@@ -116,9 +128,15 @@ public class ServerThread extends Thread {
 						//il server legge il suo file trash e gli invia le email cestinate
 						List<EmailModel> trash = MailUtils.readEmailsFromJSON("Files/Trash/" + name + "_trash.json");
 						out.writeObject(trash);
-						Platform.runLater(() -> {
-							model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Trashed emails sent to " + name));
-						});
+						if(trash.size() > 0) {
+							Platform.runLater(() -> {
+								model.addServerMessage(new ServerMessageModel(MsgType.INFO, "Trashed emails sent to " + name));
+							});
+						} else {
+							Platform.runLater(() -> {
+								model.addServerMessage(new ServerMessageModel(MsgType.WARN, "There are no trashed emails for " + name));
+							});
+						}
 						trash = new ArrayList<EmailModel>();
 					}
 					
@@ -127,10 +145,16 @@ public class ServerThread extends Thread {
 			}
 			
 		} catch (IOException e) {
-			System.err.println("I/O Exception gestita");
-			
+			System.err.println("I/O Exception gestita in ServerThread");
 		} catch (ClassNotFoundException e1) {
 			System.err.println("ClassNotFoundException in ServerThread");
+		} finally {
+			System.out.println("s.close() in server thread because the client is down");
+			try {
+				s.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

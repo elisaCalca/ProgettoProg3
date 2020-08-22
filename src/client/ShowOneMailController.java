@@ -54,6 +54,7 @@ public class ShowOneMailController {
 	private Button buttonLogOut;
 
 	private CasellaPostaModel model;
+	private CasellaPostaModel casellaTrash;
 
 	public void initModel(CasellaPostaModel model) {
 		if (this.model != null) {
@@ -61,6 +62,7 @@ public class ShowOneMailController {
 		}
 		
 		this.model = model;
+		casellaTrash = new CasellaPostaModel(model.getClient());
 		//la lettura è da far fare al server, questo metodo dovrà ascoltare la socket che riceve dal server
 		try {
 			model.loadMessageList();// aggiunto per far caricare le email del file nella casella di posta 
@@ -68,6 +70,26 @@ public class ShowOneMailController {
 			e2.printStackTrace();
 			System.out.println("An ERROR occured while loading message list");
 		} 
+		
+		//thread che si mette in ascolto delle email ricevute
+		new Thread(() -> {
+			try {
+				System.out.println("Thread che ascolta quando il client riceve");
+				while(true) {
+					Object received = model.getClient().receiveFromServer();
+					if(received instanceof EmailModel) {
+						if(((EmailModel) received).getId() < 0) {
+							casellaTrash.addMessage((EmailModel)received);
+						} else {
+							model.addMessage((EmailModel)received);
+						}
+					}
+				}
+			} catch (ClassNotFoundException | IOException e1) {
+				System.err.println("Error nel thread che ascolta quando il client riceve delle email");
+				e1.printStackTrace();
+			}
+		});
 
 		//ascolta l'email che è attualmente selezionata
 		model.currentEmailProperty().addListener((obs, oldEmail, newEmail) -> {
@@ -139,12 +161,11 @@ public class ShowOneMailController {
 
 		buttonDelete.setOnAction((ActionEvent e) -> {
 			if (model.getMessageList().size() > 0) {
-				
-				//Scrive la mail nel cestino dell'utente
-				//DEVE ESSERE INVIATA AL SERVER
+				//invia al server l'email da cestinare
 				EmailModel toDelete = model.currentEmailProperty().get();
+				toDelete.setId(toDelete.getId() * -1);	//metto l'id negativo per far capire al server cosa deve fare con la mail
 				try {
-					sendEmailToTrash(toDelete);
+					model.getClient().sendToServer(toDelete);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 					System.out.println("An ERROR occured while sending email to Trash");
@@ -154,7 +175,6 @@ public class ShowOneMailController {
 				model.setCurrentEmail(null);
 			}
 			if (model.getMessageList().size() == 0) {
-				// manca il controllo che lo riabilita se da ZERO messaggi torna ad essercene ALMENO UNO (riga 73 testare)
 				buttonDelete.setDisable(true);
 			}
 		});
@@ -193,7 +213,7 @@ public class ShowOneMailController {
 				root.setRight(editorTrashLoader.load());	
 				ShowTrashController editorTrashController = editorTrashLoader.getController();
 				
-				CasellaPostaModel casellaTrash = new CasellaPostaModel(model.getClient());
+//				CasellaPostaModel casellaTrash = new CasellaPostaModel(model.getClient());
 				casellaTrash.currentUserProperty().set(model.currentUserProperty().get());
 				listTrashController.initModel(casellaTrash);
 				editorTrashController.initModel(casellaTrash);
@@ -229,13 +249,13 @@ public class ShowOneMailController {
 	 * Riscrive il trash contenente la nuova email
 	 */
 	//TUTTO BELLO MA LO DEVE FARE IL SERVER
-	private void sendEmailToTrash(EmailModel trash) throws IOException {
-		String filepath = "Files/Trash/" + model.getCurrentUser() + "_trash.json";
-		List<EmailModel> trashList = MailUtils.readEmailsFromJSON(filepath);
-		trashList.add(trash);
-		MailUtils.writeEmailsInJSON(filepath, trashList);
-		//SE IL TRASH è APERTO DEVE AGGIORNARSI AUTOMATICAMENTE!!! - PROPERTIES
-	}
+//	private void sendEmailToTrash(EmailModel trash) throws IOException {
+//		String filepath = "Files/Trash/" + model.getCurrentUser() + "_trash.json";
+//		List<EmailModel> trashList = MailUtils.readEmailsFromJSON(filepath);
+//		trashList.add(trash);
+//		MailUtils.writeEmailsInJSON(filepath, trashList);
+//		//SE IL TRASH è APERTO DEVE AGGIORNARSI AUTOMATICAMENTE!!! - PROPERTIES
+//	}
 	
 	/*
 	 * Apre la view per:

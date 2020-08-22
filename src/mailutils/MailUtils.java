@@ -24,7 +24,23 @@ public class MailUtils {
 	public static ArrayList<EmailModel> readEmailsFromJSON(String filepath) throws IOException {
 		
 		ArrayList<EmailModel> emails = new ArrayList<EmailModel>();
-		
+		File f = new File(filepath);
+		//se il trash non esiste lo crea vuoto
+		if(!f.exists()) {
+			if(filepath.contains("trash")) {
+				f.getParentFile().mkdirs();
+				try {
+					f.createNewFile();
+					
+					//write an empty array in the new trash file
+					writeEmailsInJSON(filepath, emails);
+					
+				} catch(IOException exc) {
+					exc.printStackTrace();
+					System.err.println("Error while creating trash file");
+				}
+			}
+		}
 		JSONParser parser = new JSONParser();
 		FileReader fReader = new FileReader(filepath);
 		try {
@@ -56,22 +72,10 @@ public class MailUtils {
 			}
 			
 		} catch(IOException e) {
-			System.err.println("Gestione file not found");	//filenotfound è sottoclasse di IO
-			if(filepath.contains("trash")) {
-				File f = new File(filepath);
-				f.getParentFile().mkdirs();
-				try {
-					f.createNewFile();
-					
-					//write an empty array in the new trash file
-					writeEmailsInJSON(filepath, emails);
-					
-				} catch(IOException exc) {
-					exc.printStackTrace();
-					System.err.println("Error while creating trash file");
-				}
-			}
+			System.err.println("Gestione file not found readEmailsFromJSON");	//filenotfound è sottoclasse di IO
+			e.printStackTrace();
 		} catch (Exception e) {
+			System.err.println("Errore generico in readEmailsFromJSON");
 			e.printStackTrace();
 		} finally {
 			fReader.close();
@@ -118,6 +122,7 @@ public class MailUtils {
             file.write(trashArray.toJSONString());
             file.flush();
         } catch (IOException e) {
+        	System.err.println("Errore di scrittura su file in writeEmailsInJSON");
             e.printStackTrace();
         } finally {
         	file.close();
