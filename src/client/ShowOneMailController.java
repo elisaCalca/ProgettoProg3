@@ -1,6 +1,8 @@
 package client;
 
 import java.io.IOException;
+import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -17,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import mailutils.MailUtils;
+import server.ServerMessageModel.MsgType;
 
 public class ShowOneMailController {
 
@@ -77,19 +80,65 @@ public class ShowOneMailController {
 				System.out.println("Thread che ascolta quando il client riceve");
 				while(true) {
 					Object received = model.getClient().receiveFromServer();
+					
 					if(received instanceof EmailModel) {
 						if(((EmailModel) received).getId() < 0) {
-							casellaTrash.addMessage((EmailModel)received);
+							//il cestino ha ricevuto una email
+							Platform.runLater(() -> {
+								casellaTrash.addMessage((EmailModel)received);
+							});
 						} else {
-							model.addMessage((EmailModel)received);
+							//la mailbox ha ricevuto una email
+							Platform.runLater(() -> {
+								model.addMessage((EmailModel)received);
+								try {
+									OpenAlert("You have one new message in Mailbox", MsgType.INFO);
+								} catch (IOException exc) {
+									exc.printStackTrace();
+								}
+							});
+						}
+					} else if(received instanceof ArrayList<?>) {
+						System.out.println("Load trash list per la casella trash");
+						ArrayList<EmailModel> arr = (ArrayList<EmailModel>)received;
+						if(arr.size() > 0 && arr.get(0).getId() < 0) {
+							for(EmailModel em : arr) {
+								Platform.runLater(() -> {
+									casellaTrash.addMessage(em);
+								});
+							}
+						}
+						
+					} else if(received instanceof String) {
+						String rec = (String) received;
+						if(rec.contains("Not exist ")) {
+							String notExist = rec.replaceAll("Not exist ", "");
+							Platform.runLater(() -> {
+								try {
+									OpenAlert("Client " + notExist + " does not exist!", MsgType.INFO);
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
+							});
 						}
 					}
 				}
-			} catch (ClassNotFoundException | IOException e1) {
-				System.err.println("Error nel thread che ascolta quando il client riceve delle email");
-				e1.printStackTrace();
+			} catch (SocketException exc) {
+				System.err.println("socket exception showonemailcontroller nel thread che ascolta quello che arriva");
+			} catch (ClassNotFoundException e1) {
+				System.err.println("Error nel thread che ascolta quando il client riceve delle email");		
+			} catch (IOException e2) {
+				//popup che dice che il server è caduto
+				Platform.runLater(() -> {
+					try {
+						OpenAlert("ERROR - Unable to contact the server", MsgType.ERROR);
+					} catch (IOException ecc) {
+						ecc.printStackTrace();
+					}
+				});
+				
 			}
-		});
+		}).start();
 
 		//ascolta l'email che è attualmente selezionata
 		model.currentEmailProperty().addListener((obs, oldEmail, newEmail) -> {
@@ -162,13 +211,13 @@ public class ShowOneMailController {
 		buttonDelete.setOnAction((ActionEvent e) -> {
 			if (model.getMessageList().size() > 0) {
 				//invia al server l'email da cestinare
-				EmailModel toDelete = model.currentEmailProperty().get();
+				EmailModel toDelete = model.getCurrentEmail();
 				toDelete.setId(toDelete.getId() * -1);	//metto l'id negativo per far capire al server cosa deve fare con la mail
 				try {
 					model.getClient().sendToServer(toDelete);
 				} catch (IOException e1) {
 					e1.printStackTrace();
-					System.out.println("An ERROR occured while sending email to Trash");
+					System.err.println("An ERROR occured while sending email to Trash");
 				}
 				
 				model.getMessageList().remove(toDelete);
@@ -195,7 +244,8 @@ public class ShowOneMailController {
 
 		//	Elisa.Calcaterra@mymail.com
 		buttonTrash.setOnAction((ActionEvent e) -> {
-			buttonTrash.setDisable(true);//ok, ma poi come e quando lo riattivo??? -- analizzare bene o rimuovere
+			buttonTrash.setDisable(true);
+			casellaTrash.getMessageList().clear();//la svuota così non restano email sporche dal caricamento precedente
 			try {
 				Stage stage = new Stage();
 				//quando la finestra del cestino viene chiusa riattiva il bottone per aprire il cestino
@@ -225,8 +275,12 @@ public class ShowOneMailController {
 			} catch (IOException exc) {
 				exc.printStackTrace();
 			}
-			
 			//inviare al server la richiesta per riempire il cestino
+			try {
+				model.getClient().sendToServer("Trash " + model.getCurrentUser());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			
 		});
 		
@@ -244,20 +298,6 @@ public class ShowOneMailController {
 	}
 	
 	/*
-	 * Legge il vecchio file trash
-	 * Aggiunge la nuova email alla lista ottenuta dal trash
-	 * Riscrive il trash contenente la nuova email
-	 */
-	//TUTTO BELLO MA LO DEVE FARE IL SERVER
-//	private void sendEmailToTrash(EmailModel trash) throws IOException {
-//		String filepath = "Files/Trash/" + model.getCurrentUser() + "_trash.json";
-//		List<EmailModel> trashList = MailUtils.readEmailsFromJSON(filepath);
-//		trashList.add(trash);
-//		MailUtils.writeEmailsInJSON(filepath, trashList);
-//		//SE IL TRASH è APERTO DEVE AGGIORNARSI AUTOMATICAMENTE!!! - PROPERTIES
-//	}
-	
-	/*
 	 * Apre la view per:
 	 * - scrivere una nuova email
 	 * - inoltrare una email
@@ -270,12 +310,31 @@ public class ShowOneMailController {
 		BorderPane root = new BorderPane();
 		FXMLLoader newEmailLoader = new FXMLLoader(getClass().getResource("writeemail.fxml"));
 		root.setCenter(newEmailLoader.load());
+		
 		WriteEmailController writeEmailController = newEmailLoader.getController();
-		writeEmailController.initModel(email);
+		writeEmailController.initModel(email, model.getClient());
 		
 		Scene scene = new Scene(root, 600, 430);
 		stage.setScene(scene);
 		stage.show();
+	}
+	
+	/*
+	 * Apre una finestra di alert che mostra il messaggio che gli viene passato come parametro
+	 */
+	private void OpenAlert(String message, MsgType type) throws IOException {
+		Stage stageAlert = new Stage();
+		
+		BorderPane root = new BorderPane();
+		FXMLLoader alertLoader = new FXMLLoader(getClass().getResource("alert.fxml"));
+		root.setCenter(alertLoader.load());
+		
+		AlertController alertController = alertLoader.getController();
+		alertController.init(stageAlert, message, type);
+		
+		Scene scene = new Scene(root, 400, 200);
+		stageAlert.setScene(scene);
+		stageAlert.show();
 	}
 
 }

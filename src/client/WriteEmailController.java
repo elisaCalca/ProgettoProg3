@@ -1,5 +1,6 @@
 package client;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
 
@@ -36,14 +37,16 @@ public class WriteEmailController {
 	
 	private EmailModel model;
 	private boolean someError = false;
+	private Client client;
 	
 	
-	public void initModel(EmailModel model) {
+	public void initModel(EmailModel model, Client client) {
 		if(this.model != null) {
 			throw new IllegalStateException("Model can only be initialized once!");
 		}
 		
 		this.model = model;
+		this.client = client;
 		
 		msgAllReq.setVisible(false);
 		msgInvalidAddress.setVisible(false);
@@ -94,10 +97,13 @@ public class WriteEmailController {
 				
 				model.setDate(new Date());
 				
+				try {
+					client.sendToServer(model);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				
-				//inviarla al server 
-				
-				System.out.println("model" + model.toString());
+				System.out.println("Email inviata " + model.toString());
 			}
 		});
 	}

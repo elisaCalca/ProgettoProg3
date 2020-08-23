@@ -154,7 +154,8 @@ public class EmailModel implements Serializable{
 	 * Metodi di utility
 	 */
 	public boolean equals(EmailModel em) {
-		if( this.getId() == em.getId() &&
+		if( 
+//			this.getId() == em.getId() &&
 			this.getDate().equals(em.getDate()) &&
 			this.getMittente().equals(em.getMittente()) &&
 			this.getDestinatari().equals(em.getDestinatari()) &&

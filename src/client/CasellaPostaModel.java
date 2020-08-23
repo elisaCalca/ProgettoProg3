@@ -110,22 +110,6 @@ public class CasellaPostaModel {
 		}
 	}
 	
-	public void loadTrashMessageList() throws IOException, ClassNotFoundException {
-		try {
-			c.sendToServer("Trash " + currentUser.get());
-			ArrayList<EmailModel> receivedTrash = (ArrayList<EmailModel>)c.receiveFromServer();
-			messageList.addAll(receivedTrash);
-			orderByDateDesc();
-		} catch(ClassNotFoundException | IOException e) {
-			if(e instanceof EOFException) {
-				System.err.println("No emails received for Trash");
-			} else {
-				System.err.println("Error while loading trash list");
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	private void orderByDateDesc() {
 		EmailModel temp;
 		for(int i = 0; i < messageList.size(); i++) {

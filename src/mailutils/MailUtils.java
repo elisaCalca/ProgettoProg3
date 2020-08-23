@@ -130,6 +130,31 @@ public class MailUtils {
 	}
 	
 	/*
+	 * Aggiunge l'email al file
+	 */
+	public static void addToFile(String filepath, EmailModel email) throws IOException {
+		List<EmailModel> list = new ArrayList<EmailModel>();
+		list.add(email);
+		writeEmailsInJSON(filepath, list);
+	}
+	
+	/*
+	 * Aggiunge la lista di email al file
+	 */
+	public static void addToFile(String filepath, ArrayList<EmailModel> list) throws IOException {
+		writeEmailsInJSON(filepath, list);
+	}
+	
+	/*
+	 * Rimuove l'email dal file
+	 */
+	public static void removeFromFile(String filepath, EmailModel email) throws IOException {
+		List<EmailModel> list = new ArrayList<EmailModel>();
+		list.remove(email);
+		writeEmailsInJSON(filepath, list);
+	}
+	
+	/*
 	 * Controlla se un indirizzo email è sintatticamente corretto
 	 */
 	public static boolean isValidAddress(String address) {

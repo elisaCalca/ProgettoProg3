@@ -19,6 +19,7 @@ public class Server {
 	
 	private int port = 1234;
 	private ServerSocket ss = null;
+	private Object lock = new Object();	//utilizzato per sincronizzare le operazioni da effettuare in mutua esclusione
 	
 	public void activate(ServerModel server) throws IOException {
 		try {
@@ -36,7 +37,7 @@ public class Server {
 				Platform.runLater(() -> {
 					server.addServerMessage(new ServerMessageModel(MsgType.INFO, "Connection accepted: "+ socket));
 				});
-				ServerThread st = new ServerThread(socket, server);
+				ServerThread st = new ServerThread(socket, server, lock);
 				st.start();
 			}
 		} catch(IOException | ClassNotFoundException e) {

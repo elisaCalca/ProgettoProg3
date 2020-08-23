@@ -11,7 +11,12 @@ public class ClientApplication extends Application{
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
 //Elisa.Calcaterra@mymail.com
+//Maria.Bianchi@mymail.com
+//Giuseppe.Verdi@mymail.com
+//Mario.Rossi@mymail.com
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		

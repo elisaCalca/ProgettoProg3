@@ -1,17 +1,10 @@
 package client;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
-
-import javax.swing.JFrame;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

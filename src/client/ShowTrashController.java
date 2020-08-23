@@ -2,6 +2,7 @@ package client;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -39,15 +40,7 @@ public class ShowTrashController {
 		}
 		
 		this.model = model;
-		
-		//la lettura è da far fare al server, questo metodo dovrà ascoltare la socket che riceve dal server
-		//mandare al server la richiesta di ricevere il cestino
-		try {
-			model.loadTrashMessageList(); 
-		} catch (IOException | ClassNotFoundException e2) {
-			e2.printStackTrace();
-			System.out.println("An ERROR occured while loading trash message list of user " + model.getCurrentUser());
-		}
+		//la message list del trash viene già caricata nel controller principale
 		
 		//ascolta l'email che è attualmente selezionata
 		model.currentEmailProperty().addListener((obs, oldEmail, newEmail) -> {
@@ -84,20 +77,33 @@ public class ShowTrashController {
 		
 		buttonMoveToInbox.setOnAction((ActionEvent e) -> {
 			if(model.getCurrentEmail() != null) {
-				EmailModel toMove = new EmailModel();
-				
-				//inviarla al server che la rimette nella casella principale
-				// e la rimuove dal cestino
-				model.getMessageList().remove(toMove);
-				
+				System.out.println("mando al server l'email da togliere dal cestino");
+				EmailModel toMove = model.getCurrentEmail();
+				Platform.runLater(() -> {	//non so se serve
+					toMove.setId(toMove.getId() * -1);
+				});
+				try {
+					model.getClient().sendToServer(toMove);
+				} catch (IOException exc) {
+					System.err.println("An error occured while moving email from trash to mailbox");
+				}
+				Platform.runLater(() -> {	//non so se serve
+					model.getMessageList().remove(toMove);
+				});
 			}
 		});
 		
 		buttonDeletePerm.setOnAction((ActionEvent e) -> {
 			if(model.getCurrentEmail() != null) {
 				EmailModel toDelete = new EmailModel();
-				//inviarla al server per fargliela rimuovere per sempre dal file trash
-				model.getMessageList().remove(toDelete);
+				try {
+					model.getClient().sendToServer(toDelete);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				Platform.runLater(() -> {	//non so se serve
+					model.getMessageList().remove(toDelete);
+				});
 			}
 		});
 		

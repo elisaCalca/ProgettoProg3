@@ -1,18 +1,18 @@
 package client;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import server.ServerMessageModel.MsgType;
 
 public class Client {
 
@@ -24,7 +24,23 @@ public class Client {
 	
 	public void init() throws UnknownHostException, IOException {
 		ip = InetAddress.getByName("127.0.0.1");
-		s = new Socket(ip, port);
+		try {
+			s = new Socket(ip, port);
+		} catch(ConnectException exc) {
+			Stage stageAlert = new Stage();
+			
+			BorderPane root = new BorderPane();
+			FXMLLoader alertLoader = new FXMLLoader(getClass().getResource("alert.fxml"));
+			root.setCenter(alertLoader.load());
+			
+			AlertController alertController = alertLoader.getController();
+			alertController.init(stageAlert, "ERROR - Unable to contact the server", MsgType.ERROR);
+			
+			Scene scene = new Scene(root, 400, 200);
+			stageAlert.setScene(scene);
+			stageAlert.show(); 
+			return;
+		}
 		
 		outC = new ObjectOutputStream(s.getOutputStream());
 		inC = new ObjectInputStream(s.getInputStream());
