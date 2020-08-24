@@ -133,7 +133,7 @@ public class MailUtils {
 	 * Aggiunge l'email al file
 	 */
 	public static void addToFile(String filepath, EmailModel email) throws IOException {
-		List<EmailModel> list = new ArrayList<EmailModel>();
+		List<EmailModel> list = readEmailsFromJSON(filepath);
 		list.add(email);
 		writeEmailsInJSON(filepath, list);
 	}
@@ -141,15 +141,17 @@ public class MailUtils {
 	/*
 	 * Aggiunge la lista di email al file
 	 */
-	public static void addToFile(String filepath, ArrayList<EmailModel> list) throws IOException {
-		writeEmailsInJSON(filepath, list);
+	public static void addToFile(String filepath, ArrayList<EmailModel> toAdd) throws IOException {
+		List<EmailModel> list = readEmailsFromJSON(filepath);
+		list.addAll(toAdd);
+		writeEmailsInJSON(filepath, toAdd);
 	}
 	
 	/*
 	 * Rimuove l'email dal file
 	 */
 	public static void removeFromFile(String filepath, EmailModel email) throws IOException {
-		List<EmailModel> list = new ArrayList<EmailModel>();
+		List<EmailModel> list = readEmailsFromJSON(filepath);
 		list.remove(email);
 		writeEmailsInJSON(filepath, list);
 	}

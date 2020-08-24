@@ -229,7 +229,6 @@ public class ShowOneMailController {
 		});
 
 		buttonWriteNew.setOnAction((ActionEvent e) -> {
-//			The Javadoc of Stage states: Stage objects must be constructed and modified on the JavaFX Application Thread.
 			EmailModel newEmailModel = new EmailModel();
 			newEmailModel.setMittente(model.getCurrentUser());
 			try {

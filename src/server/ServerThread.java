@@ -57,16 +57,6 @@ public class ServerThread extends Thread {
 							model.addServerMessage(new ServerMessageModel(MsgType.INFO, clientName + "sent the following email " + receivedEmail.toString()));
 						});
 					} else if(receivedEmail.getId() < 0) {
-						ArrayList<EmailModel> trash = new ArrayList<EmailModel>();
-						synchronized (lock) {
-							trash = MailUtils.readEmailsFromJSON(trashPath);
-						}
-						if(MailUtils.isTrashed(receivedEmail, trash)) {
-							//era già stata eliminata quindi è da eliminare definitivamente
-							synchronized (lock) {
-								MailUtils.removeFromFile(trashPath, receivedEmail);
-							}
-						} else {
 							System.out.println("Un client sta mandando una email al cestino");
 							synchronized (lock) {
 								MailUtils.addToFile(trashPath, receivedEmail);
@@ -76,11 +66,12 @@ public class ServerThread extends Thread {
 							Platform.runLater(() -> {
 								model.addServerMessage(new ServerMessageModel(MsgType.INFO, clientName + " moved an email from Mailbox to the Trash"));
 							});
-						}
 					} else {
 						System.out.println("Un client sta togliendo una email dal cestino");
+						System.out.println(receivedEmail);
+						EmailModel copyToRemove = new EmailModel(receivedEmail.getId() * -1, receivedEmail.getDate(), receivedEmail.getMittente(), receivedEmail.getDestinatari(), receivedEmail.getArgomento(), receivedEmail.getTesto());
 						synchronized (lock) {
-							MailUtils.removeFromFile(trashPath, receivedEmail);
+							MailUtils.removeFromFile(trashPath, copyToRemove);
 						}
 						out.writeObject(receivedEmail);
 						Platform.runLater(() -> {

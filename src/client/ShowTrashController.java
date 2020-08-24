@@ -29,8 +29,8 @@ public class ShowTrashController {
 	@FXML
 	private Button buttonMoveToInbox;
 	
-	@FXML
-	private Button buttonDeletePerm;
+//	@FXML
+//	private Button buttonDeletePerm;
 	
 	private CasellaPostaModel model;
 	
@@ -58,7 +58,7 @@ public class ShowTrashController {
 				argomentoField.setText("");
 				testoField.setText("");
 				buttonMoveToInbox.setDisable(true);
-				buttonDeletePerm.setDisable(true);
+//				buttonDeletePerm.setDisable(true);
 			} else {
 				dateField.textProperty().bindBidirectional(newEmail.dateProperty());
 				mittenteField.textProperty().bindBidirectional(newEmail.mittenteProperty());
@@ -66,46 +66,52 @@ public class ShowTrashController {
 				argomentoField.textProperty().bindBidirectional(newEmail.argomentoProperty());
 				testoField.textProperty().bindBidirectional(newEmail.testoProperty());
 				buttonMoveToInbox.setDisable(false);
-				buttonDeletePerm.setDisable(false);
+//				buttonDeletePerm.setDisable(false);
 			}
 		});
 		
 		if(model.getCurrentEmail() == null) {
 			buttonMoveToInbox.setDisable(true);
-			buttonDeletePerm.setDisable(true);
+//			buttonDeletePerm.setDisable(true);
 		}
 		
 		buttonMoveToInbox.setOnAction((ActionEvent e) -> {
 			if(model.getCurrentEmail() != null) {
 				System.out.println("mando al server l'email da togliere dal cestino");
 				EmailModel toMove = model.getCurrentEmail();
-				Platform.runLater(() -> {	//non so se serve
+//				Platform.runLater(() -> {	//non so se serve
 					toMove.setId(toMove.getId() * -1);
-				});
+//				});
 				try {
 					model.getClient().sendToServer(toMove);
 				} catch (IOException exc) {
 					System.err.println("An error occured while moving email from trash to mailbox");
 				}
-				Platform.runLater(() -> {	//non so se serve
+//				Platform.runLater(() -> {	//non so se serve
 					model.getMessageList().remove(toMove);
-				});
+//				});
 			}
 		});
 		
-		buttonDeletePerm.setOnAction((ActionEvent e) -> {
-			if(model.getCurrentEmail() != null) {
-				EmailModel toDelete = new EmailModel();
-				try {
-					model.getClient().sendToServer(toDelete);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				Platform.runLater(() -> {	//non so se serve
-					model.getMessageList().remove(toDelete);
-				});
-			}
-		});
+//		buttonDeletePerm.setOnAction((ActionEvent e) -> {
+//			if(model.getCurrentEmail() != null) {
+//				EmailModel toDelete = new EmailModel();
+//				try {
+//					model.getClient().sendToServer(toDelete);
+//				} catch (IOException e1) {
+//					e1.printStackTrace();
+//				}
+//				Platform.runLater(() -> {	//non so se serve
+//					model.getMessageList().remove(toDelete);
+//				});
+//			}
+//		});
+		
+//		<Button fx:id="buttonDeletePerm" mnemonicParsing="false" prefHeight="47.0" prefWidth="142.0" text="Delete Permanently" GridPane.rowIndex="1">
+//        <GridPane.margin>
+//           <Insets left="80.0" />
+//        </GridPane.margin>
+//     </Button>
 		
 	}
 

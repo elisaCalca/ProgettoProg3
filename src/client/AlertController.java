@@ -25,17 +25,15 @@ public class AlertController {
 		
 		msg.setText(message);
 		
-//		Image imgSrc = null;
-//		if(level == MsgType.INFO) {
-////			imgSrc = new Image("Images/msg");
-//			
-//			image = new ImageView("Images/msg.png");
-//		} else if(level == MsgType.ERROR) {
-////			imgSrc = new Image("Images/error");
-//			String url = "Images/error.png";
-//			image = new ImageView(url);
-//		}
-////		image.setImage(imgSrc);
+		Image img = null;
+		
+		if(level == MsgType.INFO) {
+			img = new Image("file:Images/msg.png");
+		} else if(level == MsgType.ERROR) {
+			img = new Image("file:Images/error.png");
+		}
+		
+		image.setImage(img);
 		
 		buttonOk.setOnAction((ActionEvent e) -> {
 			if(level == MsgType.ERROR) {

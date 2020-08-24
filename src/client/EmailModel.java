@@ -55,6 +55,10 @@ public class EmailModel implements Serializable{
 		this.dateProperty().set(stringDate);
 	}
 	
+	public final void setDateString(final String date) {
+		this.dateProperty().set(date);
+	}
+	
 	/*
 	 * Definizione della property MITTENTE
 	 */
@@ -129,6 +133,15 @@ public class EmailModel implements Serializable{
 	public EmailModel(int id, Date date, String mittente, String destinatari, String argomento, String testo) {
 		setId(id);
 		setDate(date);
+		setMittente(mittente);
+		setDestinatari(destinatari);
+		setArgomento(argomento);
+		setTesto(testo);
+	}
+	
+	public EmailModel(int id, String date, String mittente, String destinatari, String argomento, String testo) {
+		setId(id);
+		setDateString(date);
 		setMittente(mittente);
 		setDestinatari(destinatari);
 		setArgomento(argomento);
