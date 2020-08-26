@@ -52,6 +52,9 @@ public class ServerThread extends Thread {
 					
 					if(!receivedEmail.getDestinatari().contains(clientName)) {
 						System.out.println("Un client sta cercando di inviare una email ai destinatari");
+						synchronized (lock) {
+							MailUtils.addToFile(emailsPath, receivedEmail);
+						}
 						sortingCenter(receivedEmail);
 						Platform.runLater(() -> {
 							model.addServerMessage(new ServerMessageModel(MsgType.INFO, clientName + "sent the following email " + receivedEmail.toString()));
@@ -68,8 +71,9 @@ public class ServerThread extends Thread {
 							});
 					} else {
 						System.out.println("Un client sta togliendo una email dal cestino");
-						System.out.println(receivedEmail);
+						System.out.println("sono il SERVER, ho ricevuto: " + receivedEmail);
 						EmailModel copyToRemove = new EmailModel(receivedEmail.getId() * -1, receivedEmail.getDate(), receivedEmail.getMittente(), receivedEmail.getDestinatari(), receivedEmail.getArgomento(), receivedEmail.getTesto());
+						System.out.println("devo rimuovere: " + copyToRemove);
 						synchronized (lock) {
 							MailUtils.removeFromFile(trashPath, copyToRemove);
 						}

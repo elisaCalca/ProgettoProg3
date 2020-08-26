@@ -36,7 +36,7 @@ public class Client {
 			AlertController alertController = alertLoader.getController();
 			alertController.init(stageAlert, "ERROR - Unable to contact the server", MsgType.ERROR);
 			
-			Scene scene = new Scene(root, 400, 200);
+			Scene scene = new Scene(root, 500, 200);
 			stageAlert.setScene(scene);
 			stageAlert.show(); 
 			return;

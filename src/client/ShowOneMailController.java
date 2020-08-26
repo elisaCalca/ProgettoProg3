@@ -115,7 +115,7 @@ public class ShowOneMailController {
 							String notExist = rec.replaceAll("Not exist ", "");
 							Platform.runLater(() -> {
 								try {
-									OpenAlert("Client " + notExist + " does not exist!", MsgType.INFO);
+									OpenAlert("Client " + notExist + " does not exist!", MsgType.ERROR);
 								} catch (IOException e1) {
 									e1.printStackTrace();
 								}
@@ -331,7 +331,7 @@ public class ShowOneMailController {
 		AlertController alertController = alertLoader.getController();
 		alertController.init(stageAlert, message, type);
 		
-		Scene scene = new Scene(root, 400, 200);
+		Scene scene = new Scene(root, 500, 200);
 		stageAlert.setScene(scene);
 		stageAlert.show();
 	}

@@ -77,19 +77,15 @@ public class ShowTrashController {
 		
 		buttonMoveToInbox.setOnAction((ActionEvent e) -> {
 			if(model.getCurrentEmail() != null) {
-				System.out.println("mando al server l'email da togliere dal cestino");
 				EmailModel toMove = model.getCurrentEmail();
-//				Platform.runLater(() -> {	//non so se serve
-					toMove.setId(toMove.getId() * -1);
-//				});
+				toMove.setId(toMove.getId() * -1);
+				System.out.println("mando al server l'email da togliere dal cestino. ID: " + toMove.getId());
 				try {
 					model.getClient().sendToServer(toMove);
 				} catch (IOException exc) {
 					System.err.println("An error occured while moving email from trash to mailbox");
 				}
-//				Platform.runLater(() -> {	//non so se serve
-					model.getMessageList().remove(toMove);
-//				});
+				model.getMessageList().remove(toMove);
 			}
 		});
 		
