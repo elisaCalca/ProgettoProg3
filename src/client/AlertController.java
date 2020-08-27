@@ -1,6 +1,5 @@
 package client;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -38,7 +37,12 @@ public class AlertController {
 		buttonOk.setOnAction((ActionEvent e) -> {
 			if(level == MsgType.ERROR) {
 				stage.close();
-		        System.exit(0);
+				if(!message.contains("not exist")) {
+			        System.exit(0);
+				} 
+//				else {
+//					stage.close();
+//				}
 			} else if (level == MsgType.INFO){
 				stage.close();
 			}

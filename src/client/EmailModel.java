@@ -180,6 +180,20 @@ public class EmailModel implements Serializable{
 		return false;
 	}
 	
+//	@Override
+//	public boolean equals(Object o) {
+//		if(o instanceof EmailModel) {
+//			EmailModel em = (EmailModel)o;
+//			return 	this.getId() == em.getId() &&
+//					this.getDate() == em.getDate() &&
+//					this.getMittente() == em.getMittente() &&
+//					this.getDestinatari() == em.getDestinatari() &&
+//					this.getArgomento() == em.getArgomento() &&
+//					this.getTesto() == em.getTesto();
+//		}
+//		return false;
+//	}
+	
 	@Override
 	public String toString() {
 		return (this.getId() + " " + 

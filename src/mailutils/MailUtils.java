@@ -153,8 +153,17 @@ public class MailUtils {
 	public static void removeFromFile(String filepath, EmailModel email) throws IOException {
 		List<EmailModel> list = readEmailsFromJSON(filepath);
 		System.out.println("la lista è: " + list);
-		System.out.println("removed " + list.remove(email));
+		boolean removed = false;
+		for(int i = 0; i < list.size(); i++) {
+			if(email.equals(list.get(i))) {
+				list.remove(i);
+				removed = true;
+			}
+		}
+		
+		System.err.println("removed " + removed);
 		writeEmailsInJSON(filepath, list);
+		System.out.println("la lista DOPO è: " + list);
 	}
 	
 	/*

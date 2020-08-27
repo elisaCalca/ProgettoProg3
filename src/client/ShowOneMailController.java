@@ -241,7 +241,6 @@ public class ShowOneMailController {
 			
 		});
 
-		//	Elisa.Calcaterra@mymail.com
 		buttonTrash.setOnAction((ActionEvent e) -> {
 			buttonTrash.setDisable(true);
 			casellaTrash.getMessageList().clear();//la svuota così non restano email sporche dal caricamento precedente
@@ -311,7 +310,7 @@ public class ShowOneMailController {
 		root.setCenter(newEmailLoader.load());
 		
 		WriteEmailController writeEmailController = newEmailLoader.getController();
-		writeEmailController.initModel(email, model.getClient());
+		writeEmailController.initModel(stage, email, model.getClient());
 		
 		Scene scene = new Scene(root, 600, 430);
 		stage.setScene(scene);
