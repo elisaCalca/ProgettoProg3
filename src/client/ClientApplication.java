@@ -13,7 +13,6 @@ public class ClientApplication extends Application{
 	}
 	
 //Elisa.Calcaterra@mymail.com
-//Maria.Bianchi@mymail.com
 //Giuseppe.Verdi@mymail.com
 //Mario.Rossi@mymail.com
 	

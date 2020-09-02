@@ -35,10 +35,9 @@ public class ServerThread extends Thread {
 	public void run() {
 		try {
 			
-			in = new ObjectInputStream(s.getInputStream());	//mettere nel costruttore??
+			in = new ObjectInputStream(s.getInputStream());
 			
 			while(true) {
-//				in = new ObjectInputStream(s.getInputStream());
 				Object received = in.readObject();
 				
 				if(received instanceof EmailModel) {
@@ -56,9 +55,6 @@ public class ServerThread extends Thread {
 							MailUtils.addToFile(emailsPath, receivedEmail);
 						}
 						sortingCenter(receivedEmail);
-//						Platform.runLater(() -> {
-//							model.addServerMessage(new ServerMessageModel(MsgType.INFO, clientName + "sent the following email " + receivedEmail.toString()));
-//						});
 					} else if(receivedEmail.getId() < 0) {
 							System.out.println("Un client sta mandando una email al cestino");
 							synchronized (lock) {
@@ -190,7 +186,6 @@ public class ServerThread extends Thread {
 				Platform.runLater(() -> {
 					model.addServerMessage(new ServerMessageModel(MsgType.ERROR, cl + " client does not exist!"));
 				});
-				//era stata aggiunta nel file, decidere se rimuoverla o lasciarla
 				out.writeObject("Not exist " + cl);
 			} else {
 				clientOut = model.getLstClientAssociated().get(cl.trim()).getOutputStream();

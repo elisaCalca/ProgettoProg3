@@ -66,9 +66,8 @@ public class ShowOneMailController {
 		
 		this.model = model;
 		casellaTrash = new CasellaPostaModel(model.getClient());
-		//la lettura è da far fare al server, questo metodo dovrà ascoltare la socket che riceve dal server
 		try {
-			model.loadMessageList();// aggiunto per far caricare le email del file nella casella di posta 
+			model.loadMessageList();
 		} catch (IOException | ClassNotFoundException e2) {
 			e2.printStackTrace();
 			System.out.println("An ERROR occured while loading message list");
@@ -128,7 +127,7 @@ public class ShowOneMailController {
 			} catch (ClassNotFoundException e1) {
 				System.err.println("Error nel thread che ascolta quando il client riceve delle email");		
 			} catch (IOException e2) {
-				//popup che dice che il server è caduto
+				//alert che dice che il server è caduto
 				Platform.runLater(() -> {
 					try {
 						OpenAlert("ERROR - Unable to contact the server", MsgType.ERROR);
@@ -246,6 +245,7 @@ public class ShowOneMailController {
 			casellaTrash.getMessageList().clear();//la svuota così non restano email sporche dal caricamento precedente
 			try {
 				Stage stage = new Stage();
+				
 				//quando la finestra del cestino viene chiusa riattiva il bottone per aprire il cestino
 				stage.setOnCloseRequest((WindowEvent w) -> {
 					buttonTrash.setDisable(false);

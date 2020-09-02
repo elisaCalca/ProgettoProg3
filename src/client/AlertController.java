@@ -40,9 +40,6 @@ public class AlertController {
 				if(!message.contains("not exist")) {
 			        System.exit(0);
 				} 
-//				else {
-//					stage.close();
-//				}
 			} else if (level == MsgType.INFO){
 				stage.close();
 			}

@@ -1,13 +1,7 @@
 package server;
 
-import java.io.IOException;
-import java.util.Date;
-
 import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
@@ -32,9 +26,6 @@ public class ServerController {
 		this.model = model;
 		
 		serverMessageList.setItems(model.getServerMessageList());
-		
-//		serverMessageList.setMouseTransparent(true);
-//		serverMessageList.setFocusTraversable(false);
 		
 		serverMessageList.setCellFactory(lv -> new ListCell<ServerMessageModel>() {
 			@Override
